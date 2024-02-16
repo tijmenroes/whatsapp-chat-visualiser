@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { Author } from '../utils/types.ts'
 import type { PropType } from 'vue'
-import { reactive, ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { countOccurrences, EMOJI_TABLE_ROWS } from '../utils/emojiTable'
 
 const props = defineProps({
@@ -27,14 +27,12 @@ const props = defineProps({
 
 const dataTable = ref()
 const columns = EMOJI_TABLE_ROWS
-const rows = reactive<{ emoji: string; value: number; author: string }[]>([])
 
-function getHours() {
-  // TODO: iets met author id's meegeven.
+const rows = computed<{ emoji: string; value: number; author: string }[]>(() => {
+  const rows = []
+
   props.data.map((participant) => {
-    const containingEmoji = participant.messages.filter((message) => message.emojis)
-
-    const allEmojis = containingEmoji.flatMap((item) => item.emojis)
+    const allEmojis = participant.messages.flatMap((item) => item.emojis)
 
     const emojiCount: Record<string, number> = countOccurrences(allEmojis)
 
@@ -45,17 +43,14 @@ function getHours() {
         value: key[1],
       })
     }
-    // })
-
-    return containingEmoji.flatMap((item) => item.emojis)
   })
-}
 
-// Misschien is juist hierom composable wel heel handig?
+  return rows
+})
+
 onMounted(() => {
   // Hacky way to ensure it sorts DSC, first one triggers ASC
   dataTable.value.sort('value')
   dataTable.value.sort('value')
 })
-getHours()
 </script>

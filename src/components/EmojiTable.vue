@@ -13,9 +13,10 @@
 </template>
 
 <script setup lang="ts">
+// TODO: Some chrome versions won't show certain emohji's. See if we can fix this.
 import { Author } from '../utils/types.ts'
 import type { PropType } from 'vue'
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, computed } from 'vue'
 import { QTableColumn } from 'quasar'
 
 const props = defineProps({
@@ -36,17 +37,15 @@ const columns: QTableColumn[] = [
   { name: 'value', align: 'left', label: 'Aantal', field: 'value', sortable: true },
 ]
 
-const rows = reactive<{ emoji: string; value: number }[]>([])
+const rows = computed(() => {
+  const emojiCount: Record<string, number> = props.data
+    .flatMap((participant) => participant.messages)
+    .flatMap((item) => item.emojis)
+    ?.reduce(function (acc, curr) {
+      return acc[curr] ? ++acc[curr] : (acc[curr] = 1), acc
+    }, {})
 
-function getHours() {
-  // Misschien dit veranderen met een prop ofzo. Lijkt erg veel op de andere emoji table, Of misschien gewoon composable.
-  const mapped = props.data.flatMap((participant) => {
-    const containingEmoji = participant.messages.filter((message) => message.emojis)
-    return containingEmoji.flatMap((item) => item.emojis)
-  })
-  const emojiCount: Record<string, number> = mapped.reduce(function (acc, curr) {
-    return acc[curr] ? ++acc[curr] : (acc[curr] = 1), acc
-  }, {})
+  const rows = []
 
   for (const key of Object.entries(emojiCount)) {
     rows.push({
@@ -54,12 +53,13 @@ function getHours() {
       value: key[1],
     })
   }
-}
+
+  return rows
+})
 
 onMounted(() => {
   // Hacky way to ensure it sorts DSC, first one triggers ASC
   dataTable.value.sort('value')
   dataTable.value.sort('value')
 })
-getHours()
 </script>

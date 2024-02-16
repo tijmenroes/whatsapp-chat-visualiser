@@ -27,6 +27,26 @@ export const useStore = defineStore('global', () => {
       })
   })
 
+  // think of better name
+  const authorsDataAllMessages = computed(() => {
+    return authorsData.value
+      ?.map((author) => ({
+        authorIndex: author.authorIndex,
+        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name,
+        messages: author.messages,
+      }))
+      .filter((author) => {
+        return authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.show
+      })
+  })
+
+  const messagesContainingEmoji = computed(() => {
+    return authorsDataAllMessages.value?.map((author) => ({
+      ...author,
+      messages: author.messages.filter((message) => message.emojis),
+    }))
+  })
+
   async function getData() {
     const { authors, events } = await startAnalysisFromFile()
     authors.forEach((author) => {
@@ -48,5 +68,5 @@ export const useStore = defineStore('global', () => {
 
   getData()
 
-  return { authorsData, eventsData, authorsDataMessages, authorsSettings, saveAuthorSettings }
+  return { authorsData, eventsData, authorsDataMessages, authorsSettings, saveAuthorSettings, authorsDataAllMessages, messagesContainingEmoji }
 })

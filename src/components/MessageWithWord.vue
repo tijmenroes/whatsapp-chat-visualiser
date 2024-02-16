@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { Author, Message } from '../utils/types.ts'
 import type { PropType } from 'vue'
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 
 const props = defineProps({
   data: {
@@ -44,8 +44,8 @@ const props = defineProps({
   },
 })
 
-function getHours() {
-  const mapped = props.data.map((participant) => {
+const series = computed(() => {
+  return props.data.map((participant) => {
     const dataset = props.containsPerWord ? amountOfTimesPerWord(participant) : messagesContainsOneOfWord(participant)
     const data = props.showRelative ? dataset.map((item) => parseFloat(((item / participant.messages.length) * 100).toFixed(2))) : dataset
 
@@ -54,8 +54,7 @@ function getHours() {
       data,
     }
   })
-  return mapped
-}
+})
 
 function amountOfTimesPerWord(participant) {
   const amountOfTimesPerWord: number[] = []
@@ -85,10 +84,10 @@ const options = reactive({
       type: 'x',
     },
   },
-  series: getHours(),
+  series: computed(() => series.value),
   xAxis: {
     type: '',
-    categories: props.containsPerWord ? props.filterWords : props.showRelative ? ['Totaal in %'] : ['Totaal'],
+    categories: computed(() => (props.containsPerWord ? props.filterWords : props.showRelative ? ['Totaal in %'] : ['Totaal'])),
   },
   yAxis: {
     title: {
@@ -107,8 +106,5 @@ const options = reactive({
   position: absolute;
   top: 25px;
   right: 0;
-}
-.container {
-  /* width: 800px; */
 }
 </style>

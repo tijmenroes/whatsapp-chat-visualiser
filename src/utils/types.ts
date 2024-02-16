@@ -12,6 +12,7 @@ export interface Message {
 export interface Author {
   name: string
   messages: Message[]
+  authorIndex: number
 }
 
 export interface Event {

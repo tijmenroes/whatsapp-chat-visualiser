@@ -7,7 +7,7 @@ import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
 import Highcharts from 'highcharts'
 import { createPinia } from 'pinia'
-import { router } from './router'
+import router from './router'
 
 const pinia = createPinia()
 

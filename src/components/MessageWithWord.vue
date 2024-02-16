@@ -45,7 +45,7 @@ const props = defineProps({
 })
 
 const series = computed(() => {
-  return props.data.map((participant) => {
+  return props.data?.map((participant) => {
     const dataset = props.containsPerWord ? amountOfTimesPerWord(participant) : messagesContainsOneOfWord(participant)
     const data = props.showRelative ? dataset.map((item) => parseFloat(((item / participant.messages.length) * 100).toFixed(2))) : dataset
 

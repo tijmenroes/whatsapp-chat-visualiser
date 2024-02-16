@@ -14,13 +14,17 @@ export const useStore = defineStore('global', () => {
   const eventsData = ref()
   const authorsSettings = ref<AuthorSettings[]>([])
 
-  // think of name
+  // think of better name
   const authorsDataMessages = computed(() => {
-    return authorsData.value?.map((author) => ({
-      authorIndex: author.authorIndex,
-      name: author.name,
-      messages: author.messages.filter((message) => !message.isAttachment),
-    }))
+    return authorsData.value
+      ?.map((author) => ({
+        authorIndex: author.authorIndex,
+        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name,
+        messages: author.messages.filter((message) => !message.isAttachment),
+      }))
+      .filter((author) => {
+        return authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.show
+      })
   })
 
   async function getData() {
@@ -37,7 +41,12 @@ export const useStore = defineStore('global', () => {
     eventsData.value = events
   }
 
+  // unused for now.
+  function saveAuthorSettings(settings: AuthorSettings[]) {
+    authorsSettings.value = settings
+  }
+
   getData()
 
-  return { authorsData, eventsData, authorsDataMessages, authorsSettings }
+  return { authorsData, eventsData, authorsDataMessages, authorsSettings, saveAuthorSettings }
 })

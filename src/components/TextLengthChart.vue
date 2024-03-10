@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import basicChartProps from '../config/basicChartProps'
 // import { divideNumber } from '../utils/divideNumber'
 
@@ -18,10 +18,9 @@ function divideNumber(initial: number, divideAmount: number) {
   return parseFloat((initial / divideAmount).toFixed(2))
 }
 
-// computed?
-function getHours() {
+const series = computed(() => {
   const mapped = props.data?.map((participant) => {
-    const messages = participant.messages.filter((item) => !item.isAttachment).map((item) => item.amountCharacters)
+    const messages = participant.messages.map((item) => item.amountCharacters)
     let sum = 0
     messages.forEach((item) => (sum += item))
 
@@ -33,7 +32,7 @@ function getHours() {
     }
   })
   return mapped
-}
+})
 
 const options = reactive({
   title: null,
@@ -43,7 +42,7 @@ const options = reactive({
       type: 'x',
     },
   },
-  series: getHours(),
+  series: computed(() => series.value),
   xAxis: {
     type: '',
     categories: ['Gemiddelde lengte'],

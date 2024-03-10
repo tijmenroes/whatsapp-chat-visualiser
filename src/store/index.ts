@@ -47,6 +47,19 @@ export const useStore = defineStore('global', () => {
     }))
   })
 
+  // TODO: Make this better re-usable
+  const messagesContainginAttachments = computed(() => {
+    return authorsData.value
+      ?.map((author) => ({
+        authorIndex: author.authorIndex,
+        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name,
+        messages: author.messages.filter((message) => message.isAttachment),
+      }))
+      .filter((author) => {
+        return authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.show
+      })
+  })
+
   async function getData() {
     const { authors, events } = await startAnalysisFromFile()
     authors.forEach((author) => {
@@ -68,5 +81,5 @@ export const useStore = defineStore('global', () => {
 
   getData()
 
-  return { authorsData, eventsData, authorsDataMessages, authorsSettings, saveAuthorSettings, authorsDataAllMessages, messagesContainingEmoji }
+  return { authorsData, eventsData, authorsDataMessages, authorsSettings, saveAuthorSettings, authorsDataAllMessages, messagesContainingEmoji, messagesContainginAttachments }
 })

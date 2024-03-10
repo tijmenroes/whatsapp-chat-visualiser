@@ -5,16 +5,20 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import basicChartProps from '../config/basicChartProps'
 import { divideNumber } from '../utils/divideNumber'
 
 const props = defineProps({ ...basicChartProps })
 
 // computed?
-function getHours() {
-  const mapped = props.data?.map((participant) => {
-    const messages = participant.messages.filter((item) => item.isAttachment)
+
+const series = computed(() => {
+  return props.data?.map((participant) => {
+    // Beter om de max length mee te geven?
+    const messages = props.showRelative ? participant.messages.filter((item) => item.isAttachment).map((item) => item.amountCharacters) : participant.messages.map((item) => item.amountCharacters)
+
+    // const messages = participant.messages.filter((item) => item.isAttachment)
     const data = props.showRelative ? [divideNumber(messages.length, participant.messages.length)] : [messages.length]
 
     return {
@@ -22,8 +26,7 @@ function getHours() {
       data,
     }
   })
-  return mapped
-}
+})
 
 const options = reactive({
   title: null,
@@ -33,7 +36,7 @@ const options = reactive({
       type: 'x',
     },
   },
-  series: getHours(),
+  series: computed(() => series.value),
   xAxis: {
     type: '',
     categories: props.showRelative ? ['Totaal in %'] : ['Totaal'],

@@ -142,7 +142,7 @@ export function analyseText(file: string) {
 }
 
 export async function startAnalysisFromFile() {
-  return fetch('../../public/chat-small.txt')
+  return fetch('../../whatsapp-chat-visualiser/public/chat-small.txt')
     .then((res) => res.text())
     .then((text) => {
       console.time('data formatting')

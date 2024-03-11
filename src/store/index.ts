@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { startAnalysisFromFile } from '../utils/baseScript'
+import { startAnalysisFromFile, analyseText } from '../utils/baseScript'
 import { Author } from '../utils/types'
 import { ref, computed } from 'vue'
 
@@ -74,12 +74,31 @@ export const useStore = defineStore('global', () => {
     eventsData.value = events
   }
 
+  async function setStoreData(fileString: string) {
+    const { authors, events } = await analyseText(fileString)
+    authors.forEach((author) => {
+      authorsSettings.value.push({
+        index: author.authorIndex,
+        name: author.name,
+        show: true,
+      })
+    })
+
+    authorsData.value = authors
+    eventsData.value = events
+
+    return
+  }
+
   // unused for now.
   function saveAuthorSettings(settings: AuthorSettings[]) {
     authorsSettings.value = settings
   }
 
-  getData()
+  if (import.meta.env.DEV) {
+    console.log('uee')
+    getData()
+  }
 
-  return { authorsData, eventsData, authorsDataMessages, authorsSettings, saveAuthorSettings, authorsDataAllMessages, messagesContainingEmoji, messagesContainginAttachments }
+  return { authorsData, eventsData, authorsDataMessages, authorsSettings, saveAuthorSettings, authorsDataAllMessages, messagesContainingEmoji, messagesContainginAttachments, setStoreData }
 })

@@ -11,16 +11,19 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { analyseText } from '../utils/baseScript'
+import { useStore } from './../store'
+import { useRouter } from 'vue-router'
 
 const file = ref<File | null>(null)
+const store = useStore()
+const router = useRouter()
 
-function onFileUploaded(file) {
+function onFileUploaded(file: File) {
   const reader = new FileReader()
 
-  reader.onload = () => {
-    const { authors, events } = analyseText(reader.result as string)
-    console.log(authors, events)
+  reader.onload = async () => {
+    await store.setStoreData(reader.result as string)
+    router.push('/playground')
   }
   reader.readAsText(file)
 }

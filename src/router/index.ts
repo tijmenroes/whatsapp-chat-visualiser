@@ -1,6 +1,6 @@
 import HomePage from '../views/HomePage.vue'
 import PlayGround from '../views/Playground.vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
@@ -16,7 +16,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory('/whatsapp-chat-visualiser'),
+  history: createWebHashHistory('/whatsapp-chat-visualiser'),
   routes,
 })
 

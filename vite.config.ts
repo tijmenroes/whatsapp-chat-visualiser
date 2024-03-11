@@ -4,20 +4,19 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 // import '@quasar/extras/material-icons/material-icons.css'
 // import 'quasar/src/css/index.sass'
 
-
 export default defineConfig({
+  base: '/whatsapp-chat-visualiser/',
+
   plugins: [
     vue({
-      
-      template: { transformAssetUrls }
+      template: { transformAssetUrls },
     }),
 
     // @quasar/plugin-vite options list:
     // https://github.com/quasarframework/quasar/blob/dev/vite-plugin/index.d.ts
-    quasar()
+    quasar(),
     //   {
     //   sassVariables: 'src/styles/quasar-variables.sass'
     // }
-  ]
+  ],
 })
-

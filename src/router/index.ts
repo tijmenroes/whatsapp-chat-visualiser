@@ -1,5 +1,5 @@
 import HomePage from '../views/HomePage.vue'
-import PlayGround from '../views/Playground.vue'
+import PlayGround from '../views/PlaygroundPage.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [

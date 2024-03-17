@@ -6,6 +6,13 @@
       v-model="file"
       @update:model-value="onFileUploaded"
     />
+
+    <q-btn
+      class="q-mt-xl"
+      @click="onUseDemoData"
+    >
+      Use demo data
+    </q-btn>
   </div>
 </template>
 
@@ -13,6 +20,7 @@
 import { ref } from 'vue'
 import { useStore } from './../store'
 import { useRouter } from 'vue-router'
+import { startAnalysisFromFile } from '../utils/baseScript'
 
 const file = ref<File | null>(null)
 const store = useStore()
@@ -26,5 +34,11 @@ function onFileUploaded(file: File) {
     router.push('/playground')
   }
   reader.readAsText(file)
+}
+
+async function onUseDemoData() {
+  // await store.setStoreData(reader.result as string)
+  await startAnalysisFromFile()
+  router.push('/playground')
 }
 </script>

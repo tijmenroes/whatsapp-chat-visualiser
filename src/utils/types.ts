@@ -6,7 +6,7 @@ export interface Message {
   isAttachment: boolean
   upperCharactersCount: number
   amountCharacters: number
-  emojis: string[] | null
+  emojis: string[]
 }
 
 export interface Author {
@@ -20,4 +20,10 @@ export interface Event {
   date: string
   message: string
   author: string
+}
+
+export interface AuthorSettings {
+  index: number
+  name: string
+  show: boolean
 }

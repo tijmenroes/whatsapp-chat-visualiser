@@ -2,7 +2,12 @@
   <div class="container">
     <q-icon name="information">
       <q-tooltip>
-        <div v-for="item in getHours">{{ item.name }} - {{ item?.words.join(', ') }}</div>
+        <div
+          v-for="(item, idx) in getHours"
+          :key="idx"
+        >
+          <span v-if="item?.name">{{ item.name }} - {{ item?.words.join(', ') }}</span>
+        </div>
       </q-tooltip>
     </q-icon>
     <highcharts :options="options" />
@@ -53,19 +58,19 @@ const getHours = computed(() => {
   })
 })
 
-function amountOfTimesPerWord(messages, filterWords) {
-  const amountOfTimesPerWord: number[] = []
-  filterWords.forEach((word: string) => {
-    console.log(word)
-    amountOfTimesPerWord.push(messages.filter((item) => item.message.includes(` ${word.toLowerCase()}`)).length)
-  })
-  return amountOfTimesPerWord
-}
+// function amountOfTimesPerWord(messages, filterWords) {
+//   const amountOfTimesPerWord: number[] = []
+//   filterWords.forEach((word: string) => {
+//     console.log(word)
+//     amountOfTimesPerWord.push(messages.filter((item) => item.message.includes(` ${word.toLowerCase()}`)).length)
+//   })
+//   return amountOfTimesPerWord
+// }
 
-function messagesContainsOneOfWord(messages, filterWords) {
+function messagesContainsOneOfWord(messages: Message[], filterWords: string[]) {
   const withWords: Message[] = []
 
-  filterWords.forEach((word) => {
+  filterWords.forEach((word: string) => {
     console.log(word)
     // See if word is included in the message and make sure it's already picked up by another word
     withWords.push(...messages.filter((item) => item.message.includes(` ${word.toLowerCase()}`) && withWords.findIndex((chosen) => chosen.id == item.id) == -1))
@@ -86,7 +91,8 @@ const options = reactive({
   series: getHours.value,
   xAxis: {
     type: '',
-    categories: props.containsPerWord ? props.filterWords : ['Totaal'],
+    // categories: props.containsPerWord ? props.filterWords : ['Totaal'],
+    categories: ['Totaal'],
   },
   yAxis: {
     title: {

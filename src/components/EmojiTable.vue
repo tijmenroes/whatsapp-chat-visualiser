@@ -16,7 +16,7 @@
 // TODO: Some chrome versions won't show certain emohji's. See if we can fix this.
 import { Author } from '../utils/types.ts'
 import type { PropType } from 'vue'
-import { reactive, ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { QTableColumn } from 'quasar'
 
 const props = defineProps({
@@ -41,8 +41,12 @@ const rows = computed(() => {
   const emojiCount: Record<string, number> = props.data
     .flatMap((participant) => participant.messages)
     .flatMap((item) => item.emojis)
-    ?.reduce(function (acc, curr) {
-      return acc[curr] ? ++acc[curr] : (acc[curr] = 1), acc
+    ?.reduce(function (acc: Record<string, number>, curr) {
+      // if (!curr) return acc;
+      // TODO: CHECK
+      // console.log(acc)
+      // console.log(curr)
+      return acc[curr || ''] ? ++acc[curr || ''] : (acc[curr || ''] = 1), acc
     }, {})
 
   const rows = []

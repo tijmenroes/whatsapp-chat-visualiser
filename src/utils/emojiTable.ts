@@ -1,6 +1,7 @@
 import { QTableColumn } from 'quasar'
 
 export function countOccurrences(array: string[]) {
+  if (!array || !array.length) return {}
   return array.reduce(function (acc: Record<string, number>, curr: string) {
     return acc[curr] ? ++acc[curr] : (acc[curr] = 1), acc
   }, {})

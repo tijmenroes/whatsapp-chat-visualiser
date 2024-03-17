@@ -1,25 +1,19 @@
 import { defineStore } from 'pinia'
 import { startAnalysisFromFile, analyseText } from '../utils/baseScript'
-import { Author } from '../utils/types'
+import { Author, AuthorSettings, Event } from '../utils/types'
 import { ref, computed } from 'vue'
 
-type AuthorSettings = {
-  index: number
-  name: string
-  show: boolean
-}
-
 export const useStore = defineStore('global', () => {
-  const authorsData = ref<Author[]>()
-  const eventsData = ref()
+  const authorsData = ref<Author[]>([])
+  const eventsData = ref<Event[]>([])
   const authorsSettings = ref<AuthorSettings[]>([])
 
   // think of better name
   const authorsDataMessages = computed(() => {
     return authorsData.value
-      ?.map((author) => ({
+      .map((author) => ({
         authorIndex: author.authorIndex,
-        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name,
+        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name || author.name,
         messages: author.messages.filter((message) => !message.isAttachment),
       }))
       .filter((author) => {
@@ -30,9 +24,9 @@ export const useStore = defineStore('global', () => {
   // think of better name
   const authorsDataAllMessages = computed(() => {
     return authorsData.value
-      ?.map((author) => ({
+      .map((author) => ({
         authorIndex: author.authorIndex,
-        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name,
+        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name || author.name,
         messages: author.messages,
       }))
       .filter((author) => {
@@ -50,9 +44,9 @@ export const useStore = defineStore('global', () => {
   // TODO: Make this better re-usable
   const messagesContainginAttachments = computed(() => {
     return authorsData.value
-      ?.map((author) => ({
+      .map((author) => ({
         authorIndex: author.authorIndex,
-        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name,
+        name: authorsSettings.value.find((settingItem) => settingItem.index === author.authorIndex)?.name || author.name,
         messages: author.messages.filter((message) => message.isAttachment),
       }))
       .filter((author) => {
@@ -96,7 +90,7 @@ export const useStore = defineStore('global', () => {
   }
 
   if (import.meta.env.DEV) {
-    console.log('uee')
+    console.log('is dev')
     getData()
   }
 

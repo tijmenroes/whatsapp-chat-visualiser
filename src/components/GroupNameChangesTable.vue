@@ -51,7 +51,7 @@ function filterOutGroupNameChanges(message: string) {
   return false
 }
 
-const rows = ref<{ date: string; name: string; event: string }[]>([])
+const rows = ref<{ date: string; name: string; event: string; newName: string }[]>([])
 
 function getHours() {
   const filtered = props.data.filter((item) => filterOutGroupNameChanges(item.message))
@@ -61,7 +61,8 @@ function getHours() {
   const mapped = filtered.map((item) => ({
     date: item.date,
     name: item.author,
-    newName: item.message.match(newNameRegex)[0] || '',
+    event: '',
+    newName: item?.message?.match(newNameRegex)?.length ? item.message.match(newNameRegex)![0] : '',
   }))
 
   rows.value = mapped

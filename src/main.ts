@@ -16,10 +16,8 @@ Highcharts.setOptions({
 })
 createApp(App)
   .use(Quasar, {})
-  .use(HighchartsVue, {
-    // useUtc: false,
-    // timeZoneOffset: 5 * 60,
-  })
+  // @ts-expect-error: Not sure how to fix...
+  .use(HighchartsVue)
   .use(pinia)
   .use(router)
   .mount('#app')

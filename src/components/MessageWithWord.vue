@@ -56,7 +56,7 @@ const series = computed(() => {
   })
 })
 
-function amountOfTimesPerWord(participant) {
+function amountOfTimesPerWord(participant: Author) {
   const amountOfTimesPerWord: number[] = []
   props.filterWords.forEach((word) => {
     amountOfTimesPerWord.push(participant.messages.filter((item) => item.message.includes(` ${word}`)).length)
@@ -64,7 +64,7 @@ function amountOfTimesPerWord(participant) {
   return amountOfTimesPerWord
 }
 
-function messagesContainsOneOfWord(participant) {
+function messagesContainsOneOfWord(participant: Author) {
   const withWords: Message[] = []
 
   props.filterWords.forEach((word) => {

@@ -21,7 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue';
+import { PropType } from 'vue';
+import { AuthorSettings } from '../../utils/types';
+
 const props = defineProps({
   authorSettings: {
     type: Array as PropType<AuthorSettings[]>,

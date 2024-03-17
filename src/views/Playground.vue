@@ -190,7 +190,7 @@ import { useStore } from '../store'
 
 const store = useStore()
 const filterWords = ref(['word'])
-const showwSettings = ref(true)
+const showwSettings = ref(false)
 const data = computed(() => store.authorsDataMessages)
 const allMessages = computed(() => store.authorsDataAllMessages)
 const authorSettings = computed(() => store.authorsSettings)

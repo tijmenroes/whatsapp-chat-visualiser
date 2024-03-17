@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { Author, Event } from './types'
+import { Author, Event, Message } from './types'
 
 function hourToIndex(hour: string) {
   const indexes: Record<string, number> = {
@@ -33,7 +33,8 @@ function hourToIndex(hour: string) {
 
 const authors = ref<Author[]>([])
 
-function compareFn(a, b) {
+function compareFn(a: Message, b: Message) {
+  if (!a || !b) return 0
   if (new Date(a.date) < new Date(b.date)) {
     return -1
   } else if (new Date(b.date) > new Date(a.date)) {
@@ -122,7 +123,7 @@ export function analyseText(file: string) {
             id,
             date,
             hour,
-            emojis,
+            emojis: emojis || [],
             message: text.toLowerCase(),
             amountCharacters: text.length,
             upperCharactersCount: text.length - text.replace(/[A-Z]/g, '').length,
@@ -135,6 +136,7 @@ export function analyseText(file: string) {
   }
 
   authors.value.forEach((item) => {
+    // @ts-expect-error: Not sure how to fix...
     item.messages.sort(compareFn)
   })
 
@@ -142,7 +144,7 @@ export function analyseText(file: string) {
 }
 
 export async function startAnalysisFromFile() {
-  return fetch('../../whatsapp-chat-visualiser/chat-small.txt')
+  return fetch('../../whatsapp-chat-visualiser/demo-log.txt')
     .then((res) => res.text())
     .then((text) => {
       console.time('data formatting')

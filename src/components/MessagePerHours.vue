@@ -9,6 +9,7 @@
 import { Author, Message } from '../utils/types.ts'
 import type { PropType } from 'vue'
 import { reactive } from 'vue'
+import { groupBy } from '../utils/helperFunctions.ts'
 
 const props = defineProps({
   data: {
@@ -23,14 +24,15 @@ function getHours() {
   return props.data.map((participant) => {
     const allHours = Array.from({ length: 24 }, (_, i) => i)
 
-    const dates = Object.groupBy(participant.messages, (item: Message) => item.hour)
-    // console.log(dates)
-    Object.entries(dates).forEach((item: [number, Array]) => {
+    // console.log(participant.messages)
+    const dates = groupBy(participant.messages, 'hour')
+    Object.entries(dates).forEach((item: [string | string, Message[]]) => {
+      // TODO: Fix sometimes messages showing up as null hour
       if (item[0] == 'null') {
         // console.log(item[1])
       }
-      if (item[0]) {
-        allHours[item[0]] = item[1].length
+      if (typeof item[0] === 'string') {
+        allHours[parseInt(item[0], 10)] = item[1].length
       }
     })
 

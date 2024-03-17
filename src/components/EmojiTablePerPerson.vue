@@ -25,11 +25,16 @@ const props = defineProps({
   },
 })
 
+interface EmojiTableRow {
+  emoji: string
+  value: number
+  author: string
+}
 const dataTable = ref()
 const columns = EMOJI_TABLE_ROWS
 
-const rows = computed<{ emoji: string; value: number; author: string }[]>(() => {
-  const rows = []
+const rows = computed<EmojiTableRow[]>(() => {
+  const rows: EmojiTableRow[] = []
 
   props.data.map((participant) => {
     const allEmojis = participant.messages.flatMap((item) => item.emojis)

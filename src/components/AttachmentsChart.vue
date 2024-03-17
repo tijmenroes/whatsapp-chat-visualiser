@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import basicChartProps from '../config/basicChartProps'
-import { divideNumber } from '../utils/divideNumber'
+import { divideNumber } from '../utils/helperFunctions'
 
 const props = defineProps({ ...basicChartProps })
 
@@ -52,3 +52,4 @@ const options = reactive({
   },
 })
 </script>
+../utils/helperFunctions

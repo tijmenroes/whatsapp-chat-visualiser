@@ -91,6 +91,8 @@ export const useStore = defineStore('global', () => {
 
   if (import.meta.env.DEV) {
     console.log('is dev')
+    // getData()
+  } else {
     getData()
   }
 

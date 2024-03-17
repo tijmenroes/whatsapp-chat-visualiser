@@ -25,4 +25,4 @@ dist-ssr
 
 # Local test files
 public/chat-small.txt
-chat-small.txt
+chat-small.*

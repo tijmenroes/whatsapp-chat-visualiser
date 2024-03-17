@@ -1,5 +1,6 @@
 import HomePage from '../views/HomePage.vue'
 import PlayGround from '../views/PlaygroundPage.vue'
+import ScriptPage from '../views/ScriptPage.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
@@ -12,6 +13,11 @@ const routes = [
     path: '/playground',
     name: 'PlayGround',
     component: PlayGround,
+  },
+  {
+    path: '/script',
+    name: 'ScriptPage',
+    component: ScriptPage,
   },
 ]
 

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { Author, Event, Message } from './types'
+import { Author, Event, Message, Poll } from './types'
 
 function hourToIndex(hour: string) {
   const indexes: Record<string, number> = {
@@ -48,19 +48,70 @@ function compareFn(a: Message, b: Message) {
 const isStart = '^([0-9]+)(/)([0-9]+)(/)([0-9]+), ([0-9]+):([0-9]+)[]? -'
 const dateTimeRegex = RegExp('^([0-9]+)(/)([0-9]+)(/)([0-9]+), ([0-9]+):([0-9]+)')
 const timeRegex = RegExp(', ([0-9]+):([0-9]+)')
+const voteRegex = RegExp(/\((?<name>[0-9]) vote/)
+const pollOptionRegex = RegExp(/OPTION:(?<name>.*) \([0-9] vote/)
 const emojiRegex = /\p{Extended_Pictographic}/gu
 
 export function analyseText(file: string) {
+  console.clear()
+
   const lines = file.split('\n')
   let authorIndex: number = 0
   let id: number = 0
   const events: Event[] = []
+  const polls: Poll[] = []
+  const pollIds: string[] = []
 
   const authorIds: Record<string, number> = {}
+
+  lines.forEach((line, idx) => stripPolls(line, idx))
+
+  // Note: This means we need to loop over the lines twice, not sure if performance is an issue here.
+  function stripPolls(message: string, idx: number) {
+    if (message.endsWith(': POLL:') && message.match(isStart)) {
+      const pollOptions = []
+
+      // currently max options for a poll is 12. But check the next 20 lines in case they ever up the options.
+      // Safer then putting a while loop here and checking for certain conditions.
+      for (let i = idx; i < idx + 20; i++) {
+        pollIds.push(i.toString())
+        if (i > idx + 1 && lines[i].startsWith('OPTION: ')) {
+          const text = pollOptionRegex.exec(lines[i])
+
+          if (!text) {
+            console.log(text)
+            console.log(lines[i])
+            console.log('NO TEXT FOUND')
+          }
+
+          pollOptions.push({
+            option: pollOptionRegex.exec(lines[i])?.groups?.name || '',
+            votes: voteRegex.exec(lines[i])?.groups?.name ?? 0,
+          })
+        }
+
+        if (!lines[i]) {
+          break
+        }
+      }
+
+      polls.push({
+        id: polls.length,
+        question: lines[idx + 1],
+        options: pollOptions,
+      })
+    }
+  }
+
+  console.log(polls)
 
   for (const idx in lines) {
     let message = lines[idx]
 
+    if (pollIds.includes(idx)) {
+      console.log('POLLLL')
+      continue
+    }
     if (!message.match(isStart) && message) {
       // Best onhandig, moeilijk om dit te doen anders.
       // console.log(message)
@@ -73,7 +124,6 @@ export function analyseText(file: string) {
       let date = ''
       let author = ''
       let hour: number | null = null
-      // let dateTime: string | null = null
       const messageDate = dateTimeRegex.exec(message)
       const emojis = message.match(emojiRegex)
 
@@ -84,34 +134,27 @@ export function analyseText(file: string) {
           hour = hourToIndex(messageTime[0].substring(2, 4))
         }
         message = message.replace(messageDate[0], '')
-        const startAuth = message.indexOf(' - ')
-        const endAuthor = message.indexOf(': ')
-        // Use Max's regex..
-        // Really hard regex with surnames, special characters, emoji's
-        author = message.substring(startAuth + 3, endAuthor)
+        const authorGroup = /^ -\s(?<name>.*): /gm.exec(message)
+        if (authorGroup?.groups) {
+          author = authorGroup.groups.name
+        } else continue
       }
 
-      const text = message.replace(author, '')
-
+      const text = message.replace(' - ' + author + ': ', '')
       if (message.includes('changed the group description') || message.includes('changed the group name from') || message.includes("changed this group's icon")) {
         const eventAuthorRegex = RegExp(/.+?(?=changed)/)
         const authorFound = message.match(eventAuthorRegex)
         const author = authorFound?.length ? authorFound[0].substring(3) : ''
         const eventMessage = message.replace(author, '')
         // TODO: fix you
-        // TODO: Find a way to strip whitespace
         events.push({
           id,
           date,
-          author: author === 'You ' ? 'Tijmen' : author,
+          author: author.trim() === 'You' ? 'YOUR NAME HERE' : author,
           message: eventMessage.substring(2),
         })
         id++
-      }
-
-      // const authorRegex = /- [A-Za-z]+: /g
-      // const author = message.match(authorRegex)
-      else if (author) {
+      } else if (author) {
         if (authors.value.findIndex((item: Author) => item.name === author) === -1) {
           authors.value.push({ name: author, messages: [], authorIndex: authors.value.length })
           authorIds[author] = authors.value.length - 1
@@ -127,7 +170,7 @@ export function analyseText(file: string) {
             message: text.toLowerCase(),
             amountCharacters: text.length,
             upperCharactersCount: text.length - text.replace(/[A-Z]/g, '').length,
-            isAttachment: text.includes(' <Media omitted>'),
+            isAttachment: text === '<Media omitted>',
           })
           id++
         }

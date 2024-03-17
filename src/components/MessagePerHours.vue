@@ -22,9 +22,8 @@ const props = defineProps({
 
 function getHours() {
   return props.data.map((participant) => {
-    const allHours = Array.from({ length: 24 }, (_, i) => i)
+    const allHours = Array.from({ length: 24 }, () => 0)
 
-    // console.log(participant.messages)
     const dates = groupBy(participant.messages, 'hour')
     Object.entries(dates).forEach((item: [string | string, Message[]]) => {
       // TODO: Fix sometimes messages showing up as null hour

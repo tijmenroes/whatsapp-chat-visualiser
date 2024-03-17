@@ -22,6 +22,15 @@ export interface Event {
   author: string
 }
 
+export interface Poll {
+  id: number
+  question: string
+  options: {
+    option: string
+    votes: number | string
+  }[]
+}
+
 export interface AuthorSettings {
   index: number
   name: string

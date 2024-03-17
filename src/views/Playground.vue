@@ -119,7 +119,7 @@
             <div class="row">
               <h4>Attachments relatief</h4>
               <AttachmentsChart
-                :data="data"
+                :data="allMessages"
                 show-relative
               />
             </div>

@@ -52,4 +52,3 @@ const options = reactive({
   },
 })
 </script>
-../utils/helperFunctions

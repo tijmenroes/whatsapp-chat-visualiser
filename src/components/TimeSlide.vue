@@ -23,7 +23,6 @@ const series = computed(() => {
 
     const dates = groupBy(messages, 'date')
     const mappedDates = Object.entries(dates).map((item: [string, Message[]]) => {
-      console.log(item)
       const start = new Date(item[0]).setUTCHours(0, 0, 0, 0)
       return [new Date(start).getTime(), item[1].length]
     })

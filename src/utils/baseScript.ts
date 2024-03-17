@@ -144,7 +144,9 @@ export function analyseText(file: string) {
 }
 
 export async function startAnalysisFromFile() {
-  return fetch('../../whatsapp-chat-visualiser/demo-log.txt')
+  const chatLocation = import.meta.env.DEV ? '../../whatsapp-chat-visualiser/chat-small.txt' : '../../whatsapp-chat-visualiser/demo-log.txt'
+
+  return fetch(chatLocation)
     .then((res) => res.text())
     .then((text) => {
       console.time('data formatting')

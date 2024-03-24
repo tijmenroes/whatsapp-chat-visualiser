@@ -134,9 +134,9 @@ export function analyseText(file: string) {
           hour = hourToIndex(messageTime[0].substring(2, 4))
         }
         message = message.replace(messageDate[0], '')
-        const authorGroup = /^ -\s(?<name>.*): /gm.exec(message)
-        if (authorGroup?.groups) {
-          author = authorGroup.groups.name
+        const authorGroup = /- (?<name>).*?(\S+):/gm.exec(message)
+        if (authorGroup && authorGroup[2]) {
+          author = authorGroup[2]
         } else continue
       }
 

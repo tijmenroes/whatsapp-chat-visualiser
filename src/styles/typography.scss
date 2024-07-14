@@ -1,0 +1,39 @@
+@import './variables.sass';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.isEmoji {
+  font-family: 'Noto Color Emoji', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.heading-1 {
+  font-size: 110px;
+}
+
+.heading-2 {
+  font-size: 80px;
+}
+
+.heading-3 {
+  font-size: 3rem;
+}
+
+.heading-4 {
+  font-size: 2rem;
+}
+
+body,
+html {
+  color: $text-color;
+  font-size: 16px;
+}
+
+.text-muted {
+  color: $text-muted;
+}

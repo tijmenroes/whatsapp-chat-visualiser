@@ -19,7 +19,6 @@ export interface Event {
   id: number
   date: string
   message: string
-  author: string
 }
 
 export interface Poll {
@@ -35,4 +34,19 @@ export interface AuthorSettings {
   index: number
   name: string
   show: boolean
+}
+
+export interface SummaryItem {
+  title: string
+  value: string | number
+  subtitle: string
+  icon: string
+  showValue: boolean
+  class?: string
+}
+
+export interface TopValueEntry {
+  type: string
+  value?: number | string
+  values?: { label: string; value: number }[] | []
 }

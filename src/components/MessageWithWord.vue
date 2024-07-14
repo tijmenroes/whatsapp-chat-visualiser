@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <q-icon
+    <!-- <q-icon
       v-if="showIcon"
       name="information"
       class="infoIcon"
     >
-      <q-tooltip>Gekeken naar de woorden: {{ filterWords.join(', ') }}</q-tooltip>
-    </q-icon>
+  q-tooltip>Gekeken naar de woorden: {{ filterWords.join(', ') }}</q-tooltip>s
+    </q-icon> -->
     <highcharts :options="options" />
   </div>
 </template>
@@ -38,10 +38,10 @@ const props = defineProps({
     default: false,
   },
 
-  showIcon: {
-    type: Boolean,
-    default: true,
-  },
+  // showIcon: {
+  //   type: Boolean,
+  //   default: true,
+  // },
 })
 
 const series = computed(() => {
@@ -87,7 +87,7 @@ const options = reactive({
   series: computed(() => series.value),
   xAxis: {
     type: '',
-    categories: computed(() => (props.containsPerWord ? props.filterWords : props.showRelative ? ['Totaal in %'] : ['Totaal'])),
+    categories: computed(() => (props.containsPerWord ? props.filterWords : props.showRelative ? ['Total in %'] : ['Total'])),
   },
   yAxis: {
     title: {

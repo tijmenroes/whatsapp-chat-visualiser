@@ -71,7 +71,7 @@ function messagesContainsOneOfWord(messages: Message[], filterWords: string[]) {
   const withWords: Message[] = []
 
   filterWords.forEach((word: string) => {
-    console.log(word)
+    // console.log(word)
     // See if word is included in the message and make sure it's already picked up by another word
     withWords.push(...messages.filter((item) => item.message.includes(` ${word.toLowerCase()}`) && withWords.findIndex((chosen) => chosen.id == item.id) == -1))
   })

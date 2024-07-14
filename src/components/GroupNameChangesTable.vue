@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+// Note: deprecated?
 import type { PropType } from 'vue'
 import { ref } from 'vue'
 import { QTableColumn } from 'quasar'
@@ -60,7 +61,7 @@ function getHours() {
   const newNameRegex = RegExp('(?<=" to ").*')
   const mapped = filtered.map((item) => ({
     date: item.date,
-    name: item.author,
+    name: '',
     event: '',
     newName: item?.message?.match(newNameRegex)?.length ? item.message.match(newNameRegex)![0] : '',
   }))

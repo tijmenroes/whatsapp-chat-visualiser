@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+// TODO: Maybe this is deprecated..
 import { reactive } from 'vue'
 import basicChartProps from '../config/basicChartProps'
 

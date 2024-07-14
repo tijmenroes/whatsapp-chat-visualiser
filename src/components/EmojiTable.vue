@@ -8,12 +8,19 @@
       :columns="columns"
       :pagination="{ rowsPerPage: 10 }"
       flat
-    />
+    >
+      <template #body-cell-emoji="slotProps">
+        <q-td>
+          <div class="isEmoji">
+            {{ slotProps.row.emoji }}
+          </div>
+        </q-td>
+      </template>
+    </q-table>
   </div>
 </template>
 
 <script setup lang="ts">
-// TODO: Some chrome versions won't show certain emohji's. See if we can fix this.
 import { Author } from '../utils/types.ts'
 import type { PropType } from 'vue'
 import { ref, onMounted, computed } from 'vue'
@@ -45,6 +52,7 @@ const rows = computed(() => {
       // if (!curr) return acc;
       // TODO: CHECK
       // console.log(acc)
+
       // console.log(curr)
       return acc[curr || ''] ? ++acc[curr || ''] : (acc[curr || ''] = 1), acc
     }, {})
@@ -67,3 +75,5 @@ onMounted(() => {
   dataTable.value.sort('value')
 })
 </script>
+
+<style scoped></style>

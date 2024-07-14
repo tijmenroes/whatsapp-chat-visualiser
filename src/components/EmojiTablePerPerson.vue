@@ -8,7 +8,15 @@
       :columns="columns"
       :pagination="{ rowsPerPage: 10 }"
       flat
-    />
+    >
+      <template #body-cell-emoji="slotProps">
+        <q-td>
+          <div class="isEmoji">
+            {{ slotProps.row.emoji }}
+          </div>
+        </q-td>
+      </template>
+    </q-table>
   </div>
 </template>
 

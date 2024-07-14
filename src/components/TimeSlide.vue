@@ -22,8 +22,12 @@ const series = computed(() => {
     const messages: Message[] = participant.messages
 
     const dates = groupBy(messages, 'date')
+
     const mappedDates = Object.entries(dates).map((item: [string, Message[]]) => {
       const start = new Date(item[0]).setUTCHours(0, 0, 0, 0)
+      // if (new Date(start).getTime() == 'NaN' || !new Date(start).getTime()) {
+      //   console.log('NaN', item)
+      // }
       return [new Date(start).getTime(), item[1].length]
     })
     return {

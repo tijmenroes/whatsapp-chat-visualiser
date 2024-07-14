@@ -97,7 +97,6 @@
 11/16/22, 12:20 - Alice: <Media omitted>
 11/16/22, 12:25 - John: <Media omitted>
 11/16/22, 12:30 - Alice: <Media omitted>
-...
 11/16/22, 16:55 - John: Hi Alice, I found another interesting book. <Media omitted>
 11/16/22, 17:00 - Alice: That's great, John. I'd love to see it. <Media omitted>
 11/16/22, 17:05 - John: Here's the cover. <Media omitted>

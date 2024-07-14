@@ -1,0 +1,23 @@
+@import './quasar-overrides.scss';
+@import './typography.scss';
+@import './calendar.scss';
+
+body {
+  line-height: 1.4;
+}
+
+hr {
+  border: 1px solid #e4e4e7;
+}
+
+#app {
+  /* max-width: 80%; */
+  /* margin: 0 auto; */
+  width: 100%;
+  // padding: 2rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

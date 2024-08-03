@@ -1,8 +1,9 @@
 <template>
   <div class="column justify-between pageContainer">
-    <div>icon</div>
+    <div></div>
 
     <div class="column items-center q-gutter-md">
+      <LogoComponent class="q-mb-xl" />
       <h2>All done!</h2>
 
       <q-btn
@@ -26,12 +27,13 @@
       />
     </div>
 
-    <div>By uploading files, you agree to our Terms of Service and Privacy Policy.</div>
+    <div class="text-center">By uploading files, you agree to our Terms of Service and Privacy Policy.</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { routeNames } from '../config/routeNames'
+import LogoComponent from '../components/LogoComponent.vue'
 </script>
 
 <style scoped lang="scss">

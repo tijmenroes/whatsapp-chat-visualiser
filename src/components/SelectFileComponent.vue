@@ -4,7 +4,7 @@
       class="fileUpload"
       outlined
       v-model="file"
-      accept=".txt"
+      accept=".zip, .txt"
       @update:model-value="onFileUploaded"
     >
       <template #default>
@@ -57,9 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useStore } from './../store'
 import { useRouter } from 'vue-router'
+import JSZip from 'jszip'
 
 const file = ref<File | null>(null)
 const store = useStore()
@@ -67,16 +68,30 @@ const router = useRouter()
 const isDragging = ref(false)
 const MAX_FILE_SIZE = 100000000
 
-function onFileUploaded(file: File) {
+async function onFileUploaded(file: File) {
+  const ZIP_TYPES = ['application/zip', 'application/x-zip-compressed']
+
+  if (ZIP_TYPES.includes(file.type)) {
+    handleZip(file)
+  } else {
+    readFileContent(file)
+  }
+}
+
+function readFileContent(file: File) {
   const reader = new FileReader()
 
   reader.onload = async () => {
-    // console.log(reader.result)
-    console.log('loaded file')
-    await store.setStoreData(reader.result as string)
-    router.push('/file-scanned')
+    handleFileContent(reader.result as string)
   }
   reader.readAsText(file)
+}
+
+function handleFileContent(fileContent: string) {
+  store.setStoreData(fileContent)
+  nextTick(() => {
+    router.push('/file-scanned')
+  })
 }
 
 function onDrop(event: DragEvent) {
@@ -89,6 +104,22 @@ function onDrop(event: DragEvent) {
       onFileUploaded(file)
     }
   }
+}
+
+async function handleZip(zipData: File) {
+  JSZip.loadAsync(zipData)
+    .then(function (zip) {
+      const chatFile = Object.keys(zip.files).find((key) => key.includes('_chat.txt'))
+      if (chatFile) {
+        return zip.files[chatFile].async('text')
+      } else {
+        alert('Chat file not found')
+        throw new Error('Chat file not found')
+      }
+    })
+    .then((res: string) => {
+      return handleFileContent(res)
+    })
 }
 </script>
 

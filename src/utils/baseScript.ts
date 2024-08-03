@@ -145,7 +145,7 @@ export function analyseText(file: string) {
       if (authorIndex !== null && authors[authorIndex]) {
         authors[authorIndex].messages[authors[authorIndex].messages.length - 1].message += ` ${message}`
       } else {
-        console.log(message)
+        // console.log(message)
       }
     } else {
       const [msg, date, time, amPm, authorName, messageText] = regexParser.exec(message) || []

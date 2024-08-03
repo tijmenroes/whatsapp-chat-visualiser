@@ -18,6 +18,7 @@
     "@vuepic/vue-datepicker": "^8.5.0",
     "dayjs": "^1.11.10",
     "highcharts-vue": "^1.4.3",
+    "jszip": "^3.10.1",
     "pinia": "^2.1.7",
     "quasar": "^2.14.1",
     "swiper": "^11.0.5",

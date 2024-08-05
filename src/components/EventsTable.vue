@@ -34,7 +34,7 @@ const columns: QTableColumn[] = [
     sortable: true,
   },
 
-  { name: 'event', align: 'left', label: 'Event', field: 'event', sortable: true },
+  { name: 'event', align: 'left', label: 'Event', field: 'message', sortable: true },
 ]
 
 const rows = computed<Event[]>(() => props.data)

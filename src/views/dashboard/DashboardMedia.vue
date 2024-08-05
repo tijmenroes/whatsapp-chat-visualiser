@@ -31,6 +31,7 @@
     <DashboardCard
       is-small
       title="Stickers sent"
+      v-if="showSticker"
     >
       <BarChart
         :series="attachmentsStickers.series"
@@ -41,6 +42,7 @@
     <DashboardCard
       is-small
       title="Videos sent"
+      v-if="showVideo"
     >
       <BarChart
         :series="attachmentsVideos.series"
@@ -65,6 +67,9 @@ const allMessages = computed(() => store.messagesPerAuthor)
 const attachmentMessages = computed(() => store.messagesContainginAttachments)
 const stickerMessages = computed(() => attachmentMessages.value?.map((author) => ({ ...author, messages: author.messages.filter((message) => message.message === '‎sticker weggelaten') })))
 const videoMessages = computed(() => attachmentMessages.value?.map((author) => ({ ...author, messages: author.messages.filter((message) => message.message === '‎video weggelaten') })))
+
+const showVideo = computed(() => attachmentMessages.value.some((author) => author.messages.some((message) => message.message === '‎video weggelaten')))
+const showSticker = computed(() => attachmentMessages.value.some((author) => author.messages.some((message) => message.message === '‎sticker weggelaten')))
 
 const summaryStore = useSummaryStore()
 summaryStore.setSummaryState(SUMMARY_COLLECTION.media)

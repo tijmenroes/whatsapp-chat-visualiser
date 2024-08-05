@@ -32,7 +32,7 @@
           <br />
           chat analyzer yet.
         </div>
-        <p class="col-4 q-mt-lg">Visualise your whatsapp chat and gain insights in who the biggest yapper is, the biggest emoji abuser, who cusses the most and much more...</p>
+        <p class="col-4 col-xs-12 q-mt-lg">Visualise your whatsapp chat and gain insights in who the biggest yapper is, the biggest emoji abuser, who cusses the most and much more...</p>
       </section>
 
       <hr />
@@ -58,7 +58,7 @@
       <section ref="tutorial">
         <h2 class="text-bold text-center">
           How do I export
-          <br />
+          <!-- <br /> -->
           my chat?
         </h2>
         <ExportTutorial />
@@ -224,6 +224,15 @@ hr {
 .expansionContainer {
   max-width: 800px;
   margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .contentContainer {
+    padding: 12px;
+  }
+  .hero .heroContent {
+    max-width: 100%;
+  }
 }
 
 // .q-expansion-item {

@@ -45,6 +45,6 @@ defineProps({
 .title {
   font-size: 1.6rem;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 120%;
 }
 </style>

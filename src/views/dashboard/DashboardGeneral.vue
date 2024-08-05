@@ -66,7 +66,7 @@
       />
     </DashboardCard>
 
-    <DashboardCard title="Group events">
+    <DashboardCard title="Events">
       <EventsTable :data="events" />
     </DashboardCard>
 

@@ -182,3 +182,9 @@ function dateHandler() {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.settingsContent {
+  width: 500px;
+}
+</style>

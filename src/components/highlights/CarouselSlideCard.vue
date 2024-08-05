@@ -32,7 +32,7 @@
             <div
               v-for="(author, authorIdx) in topValue.values"
               :key="authorIdx"
-              class="leaderboardItem flex q-py-md q-px-lg"
+              class="leaderboardItem flex q-py-md q-px-lg col-xs-12"
             >
               <div class="number heading-4 q-pr-md">#{{ authorIdx + 2 }}</div>
               <div
@@ -181,6 +181,7 @@ h3 {
   }
 
   h3 {
+    margin: 0;
     font-size: 1.8rem;
   }
 
@@ -190,6 +191,13 @@ h3 {
       // height: 100%;
       overflow: hidden;
     }
+  }
+
+  .leaderboardItem {
+    text-align: center;
+    justify-content: center;
+    border-right: none !important;
+    border-bottom: 1px solid #e4e4e7;
   }
 }
 </style>

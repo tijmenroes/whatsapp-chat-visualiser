@@ -16,4 +16,10 @@ footer {
   align-items: center;
   background: var(--background-bg-secondary-80, rgba(244, 244, 245, 0.8));
 }
+
+@media (max-width: 768px) {
+  footer {
+    padding: 60px 12px;
+  }
+}
 </style>

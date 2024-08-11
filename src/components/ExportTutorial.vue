@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="">
-      <div class="row justify-center q-gutter-md q-mb-xl deviceSelectors">
+      <div class="row justify-center q-gutter-md q-my-xl deviceSelectors">
         <q-card
           :class="{ active: iosSelected }"
           @click="iosSelected = true"
@@ -62,11 +62,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import SelectFileComponent from '@/components/SelectFileComponent.vue'
 
 const activeStep = ref(1)
-const iosSelected = ref(false)
+const iosSelected = ref(true)
 const steps = computed(() => (iosSelected.value ? iosSteps : androidSteps))
 const activeImage = computed(() => {
   return steps.value.find((step) => step.number === activeStep.value)?.image
@@ -122,6 +122,14 @@ function getImgUrl(img: string | undefined) {
   if (!img) return ''
   return new URL(`../assets/tutorial-steps/${img}`, import.meta.url).href
 }
+
+function checkIfAndroid() {
+  return /Android/i.test(navigator.userAgent)
+}
+
+onMounted(() => {
+  iosSelected.value = !checkIfAndroid()
+})
 </script>
 
 <style lang="scss">
@@ -184,6 +192,14 @@ function getImgUrl(img: string | undefined) {
     }
     background: $bg-primary-10;
     border-bottom-color: $primary;
+  }
+}
+
+@media (max-width: 768px) {
+  .imageContainer {
+    img {
+      width: 100%;
+    }
   }
 }
 </style>

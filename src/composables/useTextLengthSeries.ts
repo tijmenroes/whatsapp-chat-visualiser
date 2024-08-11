@@ -3,12 +3,19 @@ import { Author } from '@/utils/types'
 export default function (authors: Author[], showRelative = false) {
   const categories = ['Average length']
 
-  const series = authors?.map((participant) => {
+  const sumPerAuthor = authors?.map((participant) => {
     const messages = participant.messages.map((item) => item.amountCharacters)
     let sum = 0
     messages.forEach((item) => (sum += item))
 
-    const data = showRelative ? [divideAbsolute(sum, participant.messages.length)] : [sum]
+    return {
+      ...participant,
+      sum,
+    }
+  })
+
+  const series = sumPerAuthor?.map((participant) => {
+    const data = showRelative ? [divideAbsolute(participant.sum, participant.messages.length)] : [participant.sum]
 
     return {
       name: participant.name,
@@ -16,7 +23,7 @@ export default function (authors: Author[], showRelative = false) {
     }
   })
 
-  return { series, categories }
+  return { series, categories, sumPerAuthor }
 }
 
 function divideAbsolute(initial: number, divideAmount: number) {

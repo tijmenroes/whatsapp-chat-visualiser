@@ -7,6 +7,7 @@
       :columns="columns"
       :pagination="{ rowsPerPage: 10 }"
       flat
+      wrap-cells
     />
   </div>
 </template>
@@ -32,6 +33,7 @@ const columns: QTableColumn[] = [
     field: 'date',
     align: 'left',
     sortable: true,
+    style: 'width: 100px',
   },
 
   { name: 'event', align: 'left', label: 'Event', field: 'message', sortable: true },

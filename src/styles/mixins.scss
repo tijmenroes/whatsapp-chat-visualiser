@@ -1,0 +1,28 @@
+@mixin media($break) {
+  @if $break == lg {
+    @media (max-width: $screen-lg) {
+      @content;
+    }
+  }
+  @if $break == lt {
+    @media (max-width: $screen-lt) {
+      @content;
+    }
+  } @else if $break == md {
+    @media (max-width: $screen-md) {
+      @content;
+    }
+  } @else if $break == sm {
+    @media (max-width: $screen-sm) {
+      @content;
+    }
+  } @else if $break == xs {
+    @media (max-width: $screen-xs) {
+      @content;
+    }
+  } @else {
+    @media ($break) {
+      @content;
+    }
+  }
+}

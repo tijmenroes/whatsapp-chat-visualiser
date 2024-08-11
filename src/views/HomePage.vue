@@ -1,17 +1,17 @@
 <template>
   <div>
-    <section class="hero flex justify-center items-center">
+    <div class="hero flex justify-center items-center">
       <div class="heroContent column q-gutter-y-xl q-py-lg">
         <LogoComponent />
 
         <div class="text-center row justify-center">
-          <h1 class="text-h2 text-bold col-12 q-ma-xs">
+          <h1 class="heading-2 text-bold col-12 q-ma-xs title">
             Analyze your
             <br />
             Whatsapp chat
             <span class="text-primary">instantly.</span>
           </h1>
-          <div class="q-pt-lg col-6">Get insights into your chats - Now with more interesting graphs, free statistics and full PDF export</div>
+          <div class="q-pt-lg col-6 col-xs-10">Get insights into your chats - Now with more interesting graphs, free statistics and full PDF export</div>
         </div>
 
         <div>
@@ -22,16 +22,16 @@
           />
         </div>
       </div>
-    </section>
+    </div>
 
-    <div class="contentContainer column q-gutter-xl">
+    <div class="contentContainer column">
       <section class="text-center row justify-center">
-        <div class="text-h2 pageTitle text-bold col-12 q-pt-xl">
+        <h3 class="heading-3 pageTitle text-bold q-pt-xl">
           The
           <span>most eloborate</span>
-          <br />
+          <!-- <br /> -->
           chat analyzer yet.
-        </div>
+        </h3>
         <p class="col-4 col-xs-12 q-mt-lg">Visualise your whatsapp chat and gain insights in who the biggest yapper is, the biggest emoji abuser, who cusses the most and much more...</p>
       </section>
 
@@ -56,18 +56,18 @@
       </section> -->
 
       <section ref="tutorial">
-        <h2 class="text-bold text-center">
+        <h3 class="heading-3 text-bold text-center">
           How do I export
           <!-- <br /> -->
           my chat?
-        </h2>
+        </h3>
         <ExportTutorial />
       </section>
 
       <hr />
 
       <section class="text-center">
-        <h2 class="text-bold">Demo</h2>
+        <h2 class="text-bold q-pb-lg">Demo</h2>
         <p>Want to have a look first? Try with demo data.</p>
 
         <q-btn
@@ -76,6 +76,14 @@
           class="q-mt-lg"
           label="Use demo data"
         />
+      </section>
+
+      <hr />
+
+      <section class="text-center">
+        <h3 class="heading-3 text-bold q-pb-lg">Or upload your own chat log</h3>
+
+        <SelectFileComponent />
       </section>
 
       <hr />
@@ -107,6 +115,7 @@ import { ref } from 'vue'
 import { routeNames } from '@/config/routeNames'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
+import SelectFileComponent from '@/components/SelectFileComponent.vue'
 
 const router = useRouter()
 const store = useStore()
@@ -175,7 +184,11 @@ hr {
 }
 
 .contentContainer {
-  padding: 32px 86px;
+  padding: 32px;
+}
+
+section {
+  margin: 64px 0;
 }
 
 .hero {
@@ -221,17 +234,27 @@ hr {
   }
 }
 
+.SelectFileComponent {
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid #e4e4e7;
+}
+
 .expansionContainer {
   max-width: 800px;
   margin: 0 auto;
 }
 
 @media (max-width: 600px) {
+  .title {
+    // font-size: 1.8rem !important;
+  }
   .contentContainer {
     padding: 12px;
   }
   .hero .heroContent {
     max-width: 100%;
+    padding: 12px;
   }
 }
 

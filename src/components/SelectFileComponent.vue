@@ -1,5 +1,5 @@
 <template>
-  <div class="column justify-center items-center HomePage">
+  <div class="SelectFileComponent column justify-center items-center">
     <q-file
       class="fileUpload"
       outlined
@@ -35,10 +35,11 @@
             <q-icon
               size="xl"
               name="upload"
+              class="q-mb-md"
             />
-            <span class="heading-4 q-my-md">Drop file here</span>
+            <span class="heading-4 text-bold q-my-md">Drop file here</span>
 
-            <div class="text-uppercase text-muted row items-center">
+            <div class="text-uppercase text-muted row items-center q-my-lg">
               <div class="minus" />
               <span>or select file manually</span>
               <div class="minus" />
@@ -53,6 +54,43 @@
         </div>
       </template>
     </q-file>
+
+    <q-dialog v-model="showErrorModal">
+      <q-card class="settingsContent">
+        <q-card-section class="row justify-between items-center full-width">
+          <div class="heading-4 text-bold">Error in file</div>
+          <q-icon
+            name="close"
+            size="md"
+            @click="showErrorModal = false"
+          />
+        </q-card-section>
+        <q-card-section>
+          <p>The file you have entered is not able to be processed. Please try again with a different file.</p>
+          <p>
+            Below you can view the content of what you have uploaded, if you think this is valid please allow us to log this file.
+            <br />
+            This way we can fix the issue.
+          </p>
+
+          <div class="bg-grey-4">
+            <q-scroll-area style="height: 200px">
+              {{ errorFileContent }}
+            </q-scroll-area>
+          </div>
+
+          <div class="row justify-end q-mt-md q-gutter-md">
+            <q-btn @click="showErrorModal = false">Close</q-btn>
+            <q-btn
+              @click="sendLogToSentry"
+              color="primary"
+            >
+              Send my file as log
+            </q-btn>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -61,11 +99,14 @@ import { ref, nextTick } from 'vue'
 import { useStore } from './../store'
 import { useRouter } from 'vue-router'
 import JSZip from 'jszip'
+import * as Sentry from '@sentry/vue'
 
 const file = ref<File | null>(null)
 const store = useStore()
 const router = useRouter()
 const isDragging = ref(false)
+const showErrorModal = ref(false)
+const errorFileContent = ref('')
 const MAX_FILE_SIZE = 100000000
 
 async function onFileUploaded(file: File) {
@@ -87,10 +128,15 @@ function readFileContent(file: File) {
   reader.readAsText(file)
 }
 
-function handleFileContent(fileContent: string) {
-  store.setStoreData(fileContent)
+async function handleFileContent(fileContent: string) {
+  const isValid = await store.setStoreData(fileContent)
   nextTick(() => {
-    router.push('/file-scanned')
+    if (isValid) router.push('/file-scanned')
+    else {
+      showErrorModal.value = true
+      errorFileContent.value = fileContent
+      throw new Error('Invalid file')
+    }
   })
 }
 
@@ -121,6 +167,16 @@ async function handleZip(zipData: File) {
       return handleFileContent(res)
     })
 }
+
+function sendLogToSentry() {
+  showErrorModal.value = false
+
+  Sentry.captureException(new Error('No authors in file found'), {
+    tags: {
+      fileContent: errorFileContent.value,
+    },
+  })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -130,7 +186,7 @@ async function handleZip(zipData: File) {
     width: 700px;
 
     &:before {
-      border: 1px dashed #e4e4e7;
+      border: transparent;
       box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
     }
   }
@@ -159,5 +215,20 @@ async function handleZip(zipData: File) {
   height: 2px;
   background-color: $text-muted;
   margin: 0 4px;
+}
+
+@media (max-width: 768px) {
+  .SelectFileComponent {
+    width: 100%;
+    .fileUpload {
+      width: 100%;
+    }
+  }
+  :deep(.fileUpload) {
+    .q-field__control {
+      height: 300px;
+      width: 100%;
+    }
+  }
 }
 </style>

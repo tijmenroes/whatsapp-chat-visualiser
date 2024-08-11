@@ -206,6 +206,7 @@ export async function startAnalysisFromFile() {
 }
 
 function formatDates(authors: Author[]) {
+  console.log(authors)
   // Change the date format, if a different format is used
   if (
     !authors.every((item) => {
@@ -220,12 +221,16 @@ function formatDates(authors: Author[]) {
     })
   }
 
+  if (authors.length === 0) {
+    console.log('No authors found')
+    // return { authors, startDate: '', endDate: '' }
+  }
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const allDates = authors.flatMap((author) => author.messages.map((message) => message.date)).sort(compareFn)
   const startDate = allDates[0]
   const endDate = allDates[allDates.length - 1]
-  console.log(startDate, endDate)
 
   return { authors, startDate, endDate }
 }

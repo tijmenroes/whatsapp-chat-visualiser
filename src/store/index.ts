@@ -7,6 +7,7 @@ export const useStore = defineStore('global', () => {
   const authorsData = ref<Author[]>([])
   const eventsData = ref<Event[]>([])
   const authorsSettings = ref<AuthorSettings[]>([])
+  const hasValidChatEntered = computed(() => authorsData.value.length > 0)
   const isGroupChat = computed(() => authorsData.value.length > 2)
 
   const summaryItems = ref<SummaryItem[]>()
@@ -107,7 +108,7 @@ export const useStore = defineStore('global', () => {
     setFilterDate(startDate, endDate)
     setMaxDates(startDate, endDate)
 
-    return
+    return hasValidChatEntered.value
   }
 
   function saveAuthorSettings(settings: AuthorSettings[]) {
@@ -128,6 +129,7 @@ export const useStore = defineStore('global', () => {
     messagesContainingEmoji,
     messagesContainginAttachments,
     setStoreData,
+    hasValidChatEntered,
     filterDate,
     totalDays,
     setFilterDate,

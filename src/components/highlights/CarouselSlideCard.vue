@@ -7,12 +7,15 @@
         v-for="(topValue, idx) in topValues"
         :key="idx"
       >
-        <h3 v-if="topValue.type == CAROUSEL_CONTENT_OPTIONS.title">
+        <h3
+          v-if="topValue.type == CAROUSEL_CONTENT_OPTIONS.title"
+          class="heading-4"
+        >
           {{ topValue.value }}
         </h3>
 
         <h1
-          class="text-primary q-ma-sm"
+          class="text-primary q-ma-sm heading-1"
           v-if="topValue.type == CAROUSEL_CONTENT_OPTIONS.value"
           :class="{ isEmoji }"
         >
@@ -32,7 +35,7 @@
             <div
               v-for="(author, authorIdx) in topValue.values"
               :key="authorIdx"
-              class="leaderboardItem flex q-py-md q-px-lg col-xs-12"
+              class="leaderboardItem flex q-py-md q-px-lg col-xs-12 col-md-4"
             >
               <div class="number heading-4 q-pr-md">#{{ authorIdx + 2 }}</div>
               <div
@@ -147,6 +150,7 @@ h3 {
 
 .topValue {
   transition: opacity 0.5s;
+  margin: 24px 0;
 }
 
 .leaderboard {
@@ -176,14 +180,14 @@ h3 {
 
 @media (max-width: 768px) {
   // TODO: Just do this with typography
-  h1 {
-    font-size: 3.2rem;
-  }
+  // h1 {
+  // font-size: 3.2rem;
+  // }
 
-  h3 {
-    margin: 0;
-    font-size: 1.8rem;
-  }
+  // h3 {
+  // margin: 0;
+  // font-size: 1.8rem;
+  // }
 
   .slide {
     .q-card {
@@ -198,6 +202,10 @@ h3 {
     justify-content: center;
     border-right: none !important;
     border-bottom: 1px solid #e4e4e7;
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
 }
 </style>

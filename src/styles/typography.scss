@@ -1,4 +1,5 @@
 @import './variables.sass';
+@import './mixins.scss';
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
@@ -12,20 +13,52 @@ body {
   font-style: normal;
 }
 
+h1,
+.heading-1,
+h2,
+.heading-2,
+h3,
+.heading-3,
+h4,
+.heading-4,
+h5,
+.heading-5,
+h6,
+.heading-6 {
+  margin: 00;
+  line-height: 100%;
+}
+
 .heading-1 {
   font-size: 110px;
+
+  @include media(sm) {
+    font-size: 3.8rem;
+  }
 }
 
 .heading-2 {
   font-size: 80px;
+
+  @include media(sm) {
+    font-size: 2.8rem;
+  }
 }
 
 .heading-3 {
   font-size: 3rem;
+
+  @include media(sm) {
+    font-size: 2.2rem;
+  }
 }
 
 .heading-4 {
   font-size: 2rem;
+
+  @include media(sm) {
+    font-size: 1.8rem;
+  }
 }
 
 body,

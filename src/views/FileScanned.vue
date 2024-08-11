@@ -1,10 +1,10 @@
 <template>
-  <div class="column justify-between pageContainer">
+  <div class="column justify-between items-center pageContainer">
     <div></div>
 
-    <div class="column items-center q-gutter-md">
+    <q-card class="column items-center justify-center q-gutter-y-lg q-pb-xl q-ma-md">
       <LogoComponent class="q-mb-xl" />
-      <h2>All done!</h2>
+      <h2 class="heading-3 q-pb-xl">All done!</h2>
 
       <q-btn
         color="primary"
@@ -25,7 +25,7 @@
         icon="dashboard"
         :to="{ name: routeNames.dashboard_general }"
       />
-    </div>
+    </q-card>
 
     <div class="text-center">By uploading files, you agree to our Terms of Service and Privacy Policy.</div>
   </div>
@@ -46,5 +46,11 @@ import LogoComponent from '../components/LogoComponent.vue'
   width: 60px;
   height: 1px;
   margin: 0 10px;
+}
+
+.q-card {
+  // margin: 0 auto;
+  width: -webkit-fill-available;
+  max-width: 500px;
 }
 </style>

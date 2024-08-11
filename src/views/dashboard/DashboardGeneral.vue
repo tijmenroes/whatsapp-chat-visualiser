@@ -16,7 +16,7 @@
         hide-dropdown-icon
         use-input
         new-value-mode="add"
-        label="Multiple selection"
+        label="Filtered words"
       />
       <div class="row">
         <MessageWithWord
@@ -31,17 +31,17 @@
       is-small
       title="Emoji's used total"
     >
-      <EmojiTable :data="messagesContainingEmoji" />
+      <EmojiTable
+        :data="messagesContainingEmoji"
+        class="q-pr-md"
+      />
     </DashboardCard>
 
     <DashboardCard
       is-small
       title="Emoji's used per person"
     >
-      <EmojiTablePerPerson
-        :data="messagesContainingEmoji"
-        class="col-6"
-      />
+      <EmojiTablePerPerson :data="messagesContainingEmoji" />
     </DashboardCard>
 
     <DashboardCard
@@ -97,7 +97,7 @@ import useTextLengthSeries from '@/composables/useTextLengthSeries.ts'
 import useAttachmentSeries from '@/composables/useAttachmentSeries.ts'
 
 const store = useStore()
-const filterWords = ref(['the'])
+const filterWords = ref(['the', 'word'])
 const data = computed(() => store.authorsDataMessages)
 const allMessages = computed(() => store.messagesPerAuthor)
 const messagesContainingEmoji = computed(() => store.messagesContainingEmoji)

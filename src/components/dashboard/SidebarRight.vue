@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="SidebarRight">
     <div class="flex justify-end q-gutter-sm q-mb-md">
       <q-btn
         color="secondary"
@@ -110,6 +110,7 @@
     <q-dialog
       v-model="showwSettings"
       title="Participant settings"
+      :maximized="isMobile"
     >
       <q-card class="settingsContent">
         <q-card-section class="row justify-between items-center full-width">
@@ -137,6 +138,7 @@ import AuthorSettings from '@/components/dashboard/AuthorSettings.vue'
 import dayjs from 'dayjs'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { Screen } from 'quasar'
 
 const store = useStore()
 const showDatePicker = ref(false)
@@ -146,6 +148,8 @@ const showwSettings = ref(false)
 const summaryItems = computed(() => summaryStore.summaryItems)
 
 const { updateDate, selectMaxRange, formatDate, date, maxDates, maxRangeSelected } = dateHandler()
+
+const isMobile = computed(() => Screen.lt.md)
 
 function dateHandler() {
   const maxDates = computed(() => store.maxDates)

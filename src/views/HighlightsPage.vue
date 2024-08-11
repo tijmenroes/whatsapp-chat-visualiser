@@ -60,9 +60,19 @@
         class="slide"
       >
         <CarouselSlideCard
+          @slide-next="slide++"
+          :top-values="cardsContent[3]"
+        ></CarouselSlideCard>
+      </q-carousel-slide>
+
+      <q-carousel-slide
+        :name="5"
+        class="slide"
+      >
+        <CarouselSlideCard
           @slide-reset="slide = 1"
           is-last
-          :top-values="cardsContent[3]"
+          :top-values="cardsContent[4]"
         ></CarouselSlideCard>
       </q-carousel-slide>
     </q-carousel>
@@ -75,6 +85,7 @@ import { ref, computed } from 'vue'
 import CarouselSlideCard from '../components/highlights/CarouselSlideCard.vue'
 import { CAROUSEL_CONTENT_OPTIONS } from '../config/carouselContentOptions'
 import { TopValueEntry } from '@/utils/types'
+import useTextLengthSeries from '@/composables/useTextLengthSeries.ts'
 
 const store = useStore()
 
@@ -155,14 +166,38 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
       values: messagesPerAuthorTimed.value?.slice(1, 4).map((author) => ({ label: author.label, value: author.value.toFixed(2) })) || [],
     },
   ],
+  4: [
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.title,
+      value: 'This person just cannot stop typing...',
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.value,
+      value: textLength.value[0]?.name,
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
+      value: `Has an average message length of ${textLength.value[0]?.data} characters`,
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.leaderboard,
+      values: textLength.value?.slice(1, 4).map((author) => ({ label: author.name, value: author.data[0] })) || [],
+    },
+  ],
 }))
 
 // Why did I use authorsData instead of messagesPerAuthor?
 const authorsDataAllMessages = computed(() => store.authorsData)
+const authorsDataMessages = computed(() => store.authorsDataMessages)
 const messagesContainingEmoji = computed(() => store.messagesContainingEmoji)
 const totalMessagesSent = computed(() => authorsDataAllMessages.value.map((author) => author.messages.length).reduce((acc, curr) => acc + curr, 0))
 const messagesPerAuthor = computed(() => authorsDataAllMessages.value.map((author) => ({ label: author.name, value: author.messages.length })).sort((a, b) => b.value - a.value))
 const messagesRanking = computed(() => messagesPerAuthor.value.filter((_, idx) => idx > 0 && idx < 4))
+const textLength = computed(() => {
+  const { series } = useTextLengthSeries(authorsDataMessages.value, true)
+
+  return series.sort((a, b) => b.data[0] - a.data[0]).filter((_, idx) => idx < 4)
+})
 
 const emojiCount = computed(() => {
   const emojiCount = messagesContainingEmoji.value

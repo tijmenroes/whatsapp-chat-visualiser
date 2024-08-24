@@ -1,6 +1,7 @@
 <template>
   <div class="SelectFileComponent column justify-center items-center">
     <q-file
+      v-if="!isMobile"
       class="fileUpload"
       outlined
       v-model="file"
@@ -52,8 +53,41 @@
             />
           </div>
         </div>
+
+        <q-inner-loading :showing="isLoading">
+          <q-spinner-gears
+            size="50px"
+            color="primary"
+          />
+        </q-inner-loading>
       </template>
     </q-file>
+
+    <!-- for mobile: -->
+    <!-- <q-file
+      outlined
+      label="Select file"
+      v-model="file"
+      @update:model-value="onFileUploaded"
+    ></q-file> -->
+
+    <div
+      v-else
+      class="row justify-center"
+    >
+      <input
+        type="file"
+        @change="handleMobileUpload"
+      />
+
+      <q-spinner
+        v-if="isLoading"
+        color="primary"
+        class="q-mt-md"
+        size="3em"
+        :thickness="10"
+      />
+    </div>
 
     <q-dialog v-model="showErrorModal">
       <q-card class="settingsContent">
@@ -95,27 +129,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import { useStore } from './../store'
 import { useRouter } from 'vue-router'
 import JSZip from 'jszip'
 import * as Sentry from '@sentry/vue'
+import { Screen } from 'quasar'
 
 const file = ref<File | null>(null)
+const isMobile = computed(() => Screen.lt.md)
 const store = useStore()
 const router = useRouter()
 const isDragging = ref(false)
 const showErrorModal = ref(false)
 const errorFileContent = ref('')
 const MAX_FILE_SIZE = 100000000
+const isLoading = ref(false)
 
 async function onFileUploaded(file: File) {
+  isLoading.value = true
   const ZIP_TYPES = ['application/zip', 'application/x-zip-compressed']
 
-  if (ZIP_TYPES.includes(file.type)) {
-    handleZip(file)
+  if (!file.type) {
+    // quick hack for now, see how to improve
+    const isValid = await JSZip.loadAsync(file)
+      .then(() => true)
+      .catch(() => false)
+    if (isValid) {
+      // This is loading zip twice, small performance issue. But it works for now
+      handleZip(file)
+    } else {
+      readFileContent(file)
+    }
   } else {
-    readFileContent(file)
+    if (ZIP_TYPES.includes(file.type)) {
+      handleZip(file)
+    } else {
+      readFileContent(file)
+    }
   }
 }
 
@@ -130,9 +181,11 @@ function readFileContent(file: File) {
 
 async function handleFileContent(fileContent: string) {
   const isValid = await store.setStoreData(fileContent)
+  isLoading.value = false
   nextTick(() => {
-    if (isValid) router.push('/file-scanned')
-    else {
+    if (isValid) {
+      router.push('/file-scanned')
+    } else {
       showErrorModal.value = true
       errorFileContent.value = fileContent
       throw new Error('Invalid file')
@@ -155,10 +208,12 @@ function onDrop(event: DragEvent) {
 async function handleZip(zipData: File) {
   JSZip.loadAsync(zipData)
     .then(function (zip) {
-      const chatFile = Object.keys(zip.files).find((key) => key.includes('_chat.txt'))
+      // TODO: Improve
+      const chatFile = Object.keys(zip.files).find((key) => key.includes('.txt'))
       if (chatFile) {
         return zip.files[chatFile].async('text')
       } else {
+        isLoading.value = false
         alert('Chat file not found')
         throw new Error('Chat file not found')
       }
@@ -171,11 +226,35 @@ async function handleZip(zipData: File) {
 function sendLogToSentry() {
   showErrorModal.value = false
 
+  Sentry.getCurrentScope().addAttachment({
+    filename: 'attachment.txt',
+    data: JSON.stringify(errorFileContent.value),
+  })
+
   Sentry.captureException(new Error('No authors in file found'), {
     tags: {
       fileContent: errorFileContent.value,
     },
   })
+
+  nextTick(() => {
+    errorFileContent.value = ''
+    Sentry.getCurrentScope().clearAttachments()
+  })
+}
+
+function handleMobileUpload($event: Event) {
+  const target = $event.target as HTMLInputElement
+
+  if (target && target.files) {
+    Sentry.captureException(new Error('Mobile file upladoed'), {
+      tags: {
+        testString: 'Test string',
+        fileName: JSON.stringify(target.files[0].name),
+      },
+    })
+    onFileUploaded(target.files[0])
+  }
 }
 </script>
 
@@ -191,6 +270,7 @@ function sendLogToSentry() {
     }
   }
 }
+
 .dropArea {
   z-index: 99;
   position: absolute;
@@ -215,6 +295,15 @@ function sendLogToSentry() {
   height: 2px;
   background-color: $text-muted;
   margin: 0 4px;
+}
+
+input::file-selector-button {
+  border-radius: 8px;
+  background: $primary;
+  padding: 0.5em;
+  border: none;
+  border: thin solid grey;
+  outline: none;
 }
 
 @media (max-width: 768px) {

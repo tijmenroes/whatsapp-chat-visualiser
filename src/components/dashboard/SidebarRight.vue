@@ -6,8 +6,9 @@
         to="/highlights"
       >
         <q-icon
-          name="email"
+          name="thumb_up"
           size="xs"
+          class="q-mr-sm"
         />
         View highlights
       </q-btn>
@@ -18,6 +19,7 @@
         <q-icon
           name="settings"
           size="xs"
+          class="q-mr-sm"
         />
         Settings
       </q-btn>

@@ -100,6 +100,12 @@
           </q-expansion-item>
         </div>
       </section>
+
+      <section>
+        <h2 class="text-bold text-center">Contact</h2>
+        <p class="q-mt-lg">Have a question or suggestion or encounted any bugs? Feel free to contact us.</p>
+        <ContactForm />
+      </section>
     </div>
 
     <FooterComponent />
@@ -115,6 +121,7 @@ import { routeNames } from '@/config/routeNames'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
 import SelectFileComponent from '@/components/SelectFileComponent.vue'
+import ContactForm from '@/components/homepage/ContactForm.vue'
 
 const router = useRouter()
 const store = useStore()

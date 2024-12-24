@@ -24,6 +24,8 @@ export interface Event {
 export interface Poll {
   id: number
   question: string
+  date: string
+  authorId: number
   options: {
     option: string
     votes: number | string

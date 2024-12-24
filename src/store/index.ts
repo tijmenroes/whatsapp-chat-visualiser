@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import { startAnalysisFromFile, analyseBatch } from '../utils/baseScriptBatch'
-import { Author, AuthorSettings, Event, SummaryItem } from '../utils/types'
+import { Author, AuthorSettings, Event, Poll, SummaryItem } from '../utils/types'
 import { ref, computed, reactive } from 'vue'
 import { event } from 'vue-gtag'
 
 export const useStore = defineStore('global', () => {
   const authorsData = ref<Author[]>([])
   const eventsData = ref<Event[]>([])
+  const pollsData = ref<Poll[]>([])
   const authorsSettings = ref<AuthorSettings[]>([])
   const hasValidChatEntered = computed(() => authorsData.value.length > 0)
   const isGroupChat = computed(() => authorsData.value.length > 2)
@@ -83,21 +84,7 @@ export const useStore = defineStore('global', () => {
 
   async function getData() {
     const file = await startAnalysisFromFile()
-    const { authors, events, startDate, endDate } = await analyseChatString(file)
-    authors.forEach((author) => {
-      authorsSettings.value.push({
-        index: author.authorIndex,
-        name: author.name,
-        show: true,
-      })
-    })
-
-    authorsData.value = authors
-    eventsData.value = events
-    if (startDate && endDate) {
-      setFilterDate(startDate, endDate)
-      setMaxDates(startDate, endDate)
-    }
+    setStoreData(file)
   }
 
   async function analyseChatString(chat: string) {
@@ -107,6 +94,7 @@ export const useStore = defineStore('global', () => {
     const batchSize = 330000
     let batchIndex = 0
     const lines = chat.split('\n')
+    const lang = detectLanguage(lines[0])
     const totalAmountBatches = Math.ceil(lines.length / batchSize)
     loadingInfo.value.totalLines = lines.length
     loadingInfo.value.isActive = lines.length > batchSize
@@ -116,7 +104,7 @@ export const useStore = defineStore('global', () => {
     for (let i = 0; i < lines.length / batchSize; i++) {
       const batch = lines.slice(i * batchSize, (i + 1) * batchSize)
       batchIndex++
-      await analyseBatch(batch, state, batchIndex === totalAmountBatches)
+      await analyseBatch(batch, state, batchIndex === totalAmountBatches, lang)
       loadingInfo.value.progress = batchIndex / totalAmountBatches
 
       await new Promise((resolve) => setTimeout(resolve, 1))
@@ -125,6 +113,7 @@ export const useStore = defineStore('global', () => {
       total_lines: lines.length,
       total_authors: state.authors.length,
       total_events: state.events.length,
+      lang,
       time_elapsed: new Date().getTime() - timeStart,
     })
 
@@ -135,7 +124,8 @@ export const useStore = defineStore('global', () => {
 
   async function setStoreData(fileString: string) {
     authorsSettings.value = []
-    const { authors, events, startDate, endDate } = await analyseChatString(fileString)
+    // const { authors, events, startDate, endDate } = await analyseChatString(fileString)
+    const { authors, events, startDate, endDate, polls } = await analyseChatString(fileString)
     authors.forEach((author) => {
       authorsSettings.value.push({
         index: author.authorIndex,
@@ -146,9 +136,12 @@ export const useStore = defineStore('global', () => {
 
     authorsData.value = authors
     eventsData.value = events
-
-    setFilterDate(startDate, endDate)
-    setMaxDates(startDate, endDate)
+    pollsData.value = polls
+    if (startDate && endDate) {
+      setFilterDate(startDate, endDate)
+      setMaxDates(startDate, endDate)
+    }
+    console.log(polls)
 
     return hasValidChatEntered.value
   }
@@ -166,6 +159,7 @@ export const useStore = defineStore('global', () => {
     eventsData,
     authorsDataMessages,
     authorsSettings,
+    pollsData,
     saveAuthorSettings,
     messagesPerAuthor,
     messagesContainingEmoji,
@@ -182,5 +176,33 @@ export const useStore = defineStore('global', () => {
     maxDates,
     setAuthorsSettings,
     loadingInfo,
+    analyseChatString,
   }
 })
+
+function detectLanguage(firstLine: string) {
+  const encryptionMessages = {
+    'Berichten en gesprekken worden end-to-end versleuteld.': 'nl',
+    'Messages and calls are end-to-end encrypted.': 'en',
+    'I messaggi e le chiamate sono crittografati end-to-end.': 'it',
+    'Los mensajes y llamadas están cifrados de extremo a extremo.': 'es',
+    'Die Nachrichten und Anrufe sind Ende-zu-Ende-verschlüsselt.': 'de',
+    'Les messages et appels sont chiffrés de bout en bout.': 'fr',
+    'As mensagens e chamadas são criptografadas de ponta a ponta. Ninguém fora deste chat, nem mesmo o WhatsApp, pode lê-las ou ouvi-las.': 'pt-br', // Brazilian Portuguese
+    'As mensagens e chamadas estão encriptadas de ponta a ponta. Ninguém fora deste chat, nem mesmo o WhatsApp, pode lê-las ou ouvi-las.': 'pt-pt', // European Portuguese
+    'Сообщения и звонки защищены сквозным шифрованием. Никто вне этого чата, даже WhatsApp, не может их прочитать или прослушать.': 'ru',
+  }
+
+  let detectedLanguage = ''
+
+  Object.entries(encryptionMessages).forEach(([key, value]) => {
+    if (firstLine.includes(key)) {
+      detectedLanguage = value
+    }
+  })
+  if (!detectedLanguage) {
+    event('language_not_detected', { firstLine, navigatorLanguage: navigator.languages })
+  }
+  console.log('Detected language:', detectedLanguage)
+  return detectedLanguage
+}

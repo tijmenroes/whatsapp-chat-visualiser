@@ -1,32 +1,56 @@
 <template>
   <q-card>
+    <!-- {{ poll }} -->
     <q-card-section>
       <div
         class="text-h6"
-        v-text="title"
-      ></div>
-    </q-card-section>
-    <ul>
-      <li
-        v-for="(item, idx) in options"
+        v-text="poll.question"
+      />
+      <p class="subtitle">{{ authorName?.name }} on {{ poll.date }}</p>
+      <div
+        v-for="(item, idx) in poll.options"
         class="text-left"
         :key="idx"
       >
-        {{ item }}
-      </li>
-    </ul>
+        <b>{{ item.votes }} votes:</b>
+        {{ item.option }}
+      </div>
+    </q-card-section>
   </q-card>
 </template>
 
 <script setup lang="ts">
-defineProps({
-  title: {
-    type: String,
-    default: '',
-  },
-  options: {
-    type: Array,
-    default: () => [],
+import { PropType } from 'vue'
+import { Poll } from '@/utils/types'
+import { useStore } from '@/store'
+import { computed } from 'vue'
+
+const props = defineProps({
+  poll: {
+    type: Object as PropType<Poll>,
+    required: true,
   },
 })
+
+const store = useStore()
+console.log(store.authorsSettings)
+// Maybe also filter on show?
+const authorName = computed(() => store.authorsSettings.find((author) => props.poll.authorId === author.index))
 </script>
+
+<style scoped lang="scss">
+.subtitle {
+  font-size: 0.8rem;
+}
+
+.q-card {
+  // fix auto margin for q-card, kinda annoying. Maybe just a specific class
+  // margin: 0 !important;
+}
+
+li {
+  /* list-style-type: none; */
+  /* padding: 0; */
+  /* margin: 0; */
+}
+</style>

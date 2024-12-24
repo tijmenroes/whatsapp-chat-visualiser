@@ -1,6 +1,7 @@
 import { Author, Event, Poll } from './types'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { POLL_TRANSLATION, POLL_OPTION_TRANSLATION, VOTE_TRANSLATION } from './chatTerms'
 dayjs.extend(customParseFormat)
 
 function hourToIndex(hour: string) {
@@ -48,8 +49,22 @@ function getTime(time: string, amPm: string) {
 }
 
 function isAttachment(message: string) {
-  const attachmentMessages = ['<Media omitted>', '‎image omitted', '‎sticker omitted', '‎afbeelding weggelaten', '‎sticker weggelaten', '‎video weggelaten']
-  return attachmentMessages.includes(message)
+  //TODO: Optimize this with langauge specific messages, and also android vs iOS.
+  const attachmentMessages = ['<Media omitted>', '<Video note omitted>', '‎image omitted', '‎sticker omitted', '‎afbeelding weggelaten', '‎sticker weggelaten', '‎video weggelaten']
+  const attachmentMessagesEstimated = [
+    '<Medios omitidos>',
+    '<Nota de video omitida>',
+    '<Medien ausgelassen>',
+    '<Videonotiz ausgelassen>',
+    '<Média omis>',
+    '<Note vidéo omise>',
+    '<Mídia omitida>',
+    '<Nota de vídeo omitida>',
+    '<Media omesso>',
+    '<Nota video omessa>',
+  ]
+  // const attachmentMessagesIOSEstimated = ['<Media omitted>', '<Video note omitted>', '‎image omitted', '‎sticker omitted']
+  return [...attachmentMessages, ...attachmentMessagesEstimated].includes(message)
 }
 
 function compareFn(a: string | undefined, b: string | undefined) {
@@ -61,6 +76,11 @@ function compareFn(a: string | undefined, b: string | undefined) {
   }
 }
 
+function getTranslation(lang: string, translationList: { lang: string; translation: string }[]) {
+  const translation = translationList.find((item) => item.lang === lang)
+  return translation ? translation.translation : translationList[0].translation
+}
+
 // whatsapp chart parser regex
 const sharedRegex = /^(?:\u200E|\u200F)*\[?(\d{1,4}[-/.]\s?\d{1,4}[-/.]\s?\d{1,4})[,.]?\s\D*?(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:\s([ap]\.?\s?m\.?))?\]?(?:\s-|:)?\s/
 const authorAndMessageRegex = /(.+?):\s([^]*)/
@@ -69,18 +89,19 @@ const regexParser = new RegExp(sharedRegex.source + authorAndMessageRegex.source
 const regexParserSystem = new RegExp(sharedRegex.source + messageRegex.source, 'i') // works for android, not iOS.
 
 const isStart = '^([0-9]+)(/)([0-9]+)(/)([0-9]+), ([0-9]+):([0-9]+)[]? -'
-const voteRegex = RegExp(/\((?<name>[0-9]) vote/)
-const pollOptionRegex = RegExp(/OPTION:(?<name>.*) \([0-9] vote/)
 const emojiRegex = /\p{Extended_Pictographic}/gu
 
-export async function analyseBatch(lines: string[], state: { authors: Author[]; events: Event[]; polls: Poll[]; startDate?: string; endDate?: string; id: number }, isFinalBatch: boolean = false) {
+export async function analyseBatch(
+  lines: string[],
+  state: { authors: Author[]; events: Event[]; polls: Poll[]; startDate?: string; endDate?: string; id: number },
+  isFinalBatch: boolean = false,
+  language: string
+) {
   const { authors, events, polls } = state
-  // const authors: Author[] = []
-
+  const voteRegex = RegExp(/\((?<name>[0-9]) vote/)
+  const pollOptionRegex = RegExp(`${getTranslation(language, POLL_OPTION_TRANSLATION)}:(?<name>.*) \\([0-9] ${getTranslation(language, VOTE_TRANSLATION)}`)
   let authorIndex: number = 0
   let id: number = 0
-  // const events: Event[] = []
-  // const polls: Poll[] = []
   const pollIds: string[] = []
 
   const authorIds: Record<string, number> = {}
@@ -97,14 +118,16 @@ export async function analyseBatch(lines: string[], state: { authors: Author[]; 
 
   // Note: This means we need to loop over the lines twice, not sure if performance is an issue here.
   function stripPolls(message: string, idx: number) {
-    if (message.endsWith(': POLL:') && message.match(isStart)) {
+    if (message.endsWith(`: ${getTranslation(language, POLL_TRANSLATION)}:`) && message.match(isStart)) {
       const pollOptions = []
+
+      const [msg, date, time, amPm, authorName, messageText] = regexParser.exec(message) || []
 
       // currently max options for a poll is 12. But check the next 20 lines in case they ever up the options.
       // Safer then putting a while loop here and checking for certain conditions.
       for (let i = idx; i < idx + 20; i++) {
         pollIds.push(i.toString())
-        if (i > idx + 1 && lines[i].startsWith('OPTION: ')) {
+        if (i > idx + 1 && lines[i].startsWith(`${getTranslation(language, POLL_OPTION_TRANSLATION)}: `)) {
           pollOptions.push({
             option: pollOptionRegex.exec(lines[i])?.groups?.name || '',
             votes: voteRegex.exec(lines[i])?.groups?.name ?? 0,
@@ -116,8 +139,17 @@ export async function analyseBatch(lines: string[], state: { authors: Author[]; 
         }
       }
 
+      // Make a func for this.
+      if (authors.findIndex((item: Author) => item.name === authorName) === -1) {
+        authors.push({ name: authorName, messages: [], authorIndex: authors.length })
+        authorIds[authorName] = authors.length - 1
+      }
+      authorIndex = authorIds[authorName]
+
       polls.push({
         id: polls.length,
+        authorId: authorIndex,
+        date,
         question: lines[idx + 1],
         options: pollOptions,
       })
@@ -207,7 +239,7 @@ export async function analyseBatch(lines: string[], state: { authors: Author[]; 
 }
 
 export async function startAnalysisFromFile(): Promise<string> {
-  const chatLocation = import.meta.env.DEV ? '../../chat-small.copy.txt' : '../../demo-log.txt'
+  const chatLocation = import.meta.env.DEV ? '../../chat-small.txt' : '../../demo-log.txt'
 
   // const state = { authors: [], events: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
 

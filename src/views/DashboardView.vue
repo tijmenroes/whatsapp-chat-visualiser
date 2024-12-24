@@ -2,7 +2,10 @@
   <div v-if="allMessages?.length">
     <q-layout class="row">
       <div class="mobileToolbar">
-        <q-toolbar>
+        <q-toolbar
+          flat
+          class="elevation-0"
+        >
           <q-btn
             flat
             round
@@ -31,7 +34,7 @@
       </div>
 
       <div class="contentContainer row col-md-9 col-lg-10 col-xs-12">
-        <div class="col-md-9 col-lg-9 col-xs-12">
+        <div class="dashboardContainer col-md-9 col-lg-9 col-xs-12">
           <router-view class="dashboardView" />
         </div>
 
@@ -49,9 +52,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useStore } from '../store'
-// import LogoComponent from '../components/LogoComponent.vue'
-
-// import FooterComponent from '@/components/FooterComponent.vue'
 import SidebarLeft from '../components/dashboard/SidebarLeft.vue'
 import SidebarRight from '../components/dashboard/SidebarRight.vue'
 
@@ -66,7 +66,13 @@ const drawer = ref(false)
 }
 
 .sidebarRight {
-  padding-left: 32px;
+  padding: 32px;
+}
+
+.dashboardContainer {
+  overflow-y: scroll;
+  max-height: 100vh;
+  padding-top: 32px;
 }
 
 .mobileToolbar,
@@ -80,7 +86,7 @@ const drawer = ref(false)
   }
 }
 
-@media (max-width: $screen-sm) {
+@media (max-width: $screen-md) {
   .mobileToolbar {
     position: fixed;
     width: 100%;

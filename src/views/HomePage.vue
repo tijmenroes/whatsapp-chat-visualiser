@@ -5,7 +5,7 @@
         <LogoComponent />
 
         <div class="text-center row justify-center">
-          <h1 class="heading-2 text-bold col-12 q-ma-xs title">
+          <h1 class="heading-3 text-bold col-12 q-ma-xs title">
             Analyze your
             <br />
             Whatsapp chat
@@ -17,6 +17,7 @@
         <div>
           <q-btn
             @click="scrollToTutorial"
+            class="q-mb-lg"
             color="primary"
             label="Get started"
           />
@@ -29,7 +30,6 @@
         <h3 class="heading-3 pageTitle text-bold q-pt-xl">
           The
           <span>most eloborate</span>
-          <!-- <br /> -->
           chat analyzer yet.
         </h3>
         <p class="col-4 col-xs-12 q-mt-lg">Visualise your whatsapp chat and gain insights in who the biggest yapper is, the biggest emoji abuser, who cusses the most and much more...</p>
@@ -67,6 +67,13 @@
       <hr />
 
       <section class="text-center">
+        <h3 class="heading-3 text-bold q-pb-lg">Upload your chat log</h3>
+
+        <SelectFileComponent />
+      </section>
+      <hr />
+
+      <section class="text-center">
         <h2 class="text-bold q-pb-lg">Demo</h2>
         <p>Want to have a look first? Try with demo data.</p>
 
@@ -80,17 +87,9 @@
 
       <hr />
 
-      <section class="text-center">
-        <h3 class="heading-3 text-bold q-pb-lg">Or upload your own chat log</h3>
-
-        <SelectFileComponent />
-      </section>
-
-      <hr />
-
       <section>
         <h2 class="text-bold text-center">FAQ</h2>
-        <div class="expansionContainer column q-gutter-md">
+        <div class="expansionContainer column">
           <q-expansion-item
             v-for="(faqItem, idx) in faqItems"
             :key="idx"
@@ -176,8 +175,9 @@ async function onUseDemoData() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/styles/variables.sass';
+// TODO: Kijken wat de scope nu heeft gedaan?
 
 hr {
   width: 100%;
@@ -188,7 +188,9 @@ hr {
 }
 
 section {
-  margin: 64px 0;
+  margin: auto;
+  padding: 64px 0;
+  max-width: 1200px;
 }
 
 .hero {
@@ -214,7 +216,8 @@ section {
     text-align: center;
     text-align: center;
     background: #0000004d;
-    max-width: 60vw;
+    max-width: 1300px;
+    margin: 48px;
 
     display: inline-flex;
     padding: var(--spacing-6, 24px) var(--spacing-12, 48px);
@@ -255,6 +258,7 @@ section {
   .hero .heroContent {
     max-width: 100%;
     padding: 12px;
+    margin: 12px;
   }
 }
 

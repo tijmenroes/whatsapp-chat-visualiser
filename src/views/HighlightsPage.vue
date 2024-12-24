@@ -1,12 +1,12 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md container">
     <q-carousel
       ref="carousel"
       class="carousel"
       swipeable
       animated
       v-model="slide"
-      :fullscreen="fullscreen"
+      :fullscreen="true"
       control-color="primary"
       infinite
       navigation
@@ -221,7 +221,13 @@ const messagesPerAuthorTimed = computed(() => messagesPerAuthor.value.map((autho
 @import '../styles/variables.sass';
 
 .carousel {
+  height: 100%;
   background-image: url('../assets/highlights-pattern.svg');
+}
+
+.container {
+  height: 100vh;
+  width: 100vw;
 }
 
 .qarousel-navigation {
@@ -242,10 +248,6 @@ const messagesPerAuthorTimed = computed(() => messagesPerAuthor.value.map((autho
   justify-content: center;
   align-items: center;
   height: 100%;
-  .q-card {
-    width: 700px;
-    text-align: center;
-  }
 }
 
 h1,

@@ -36,6 +36,7 @@
               v-for="(author, authorIdx) in topValue.values"
               :key="authorIdx"
               class="leaderboardItem flex q-py-md q-px-lg col-xs-12 col-md-4"
+              :class="{ leaderboardEmoji: isEmoji }"
             >
               <div class="number heading-4 q-pr-md">#{{ authorIdx + 2 }}</div>
               <div
@@ -46,7 +47,7 @@
                   class="text-primary heading-5 author"
                   :class="{ isEmoji }"
                 >
-                  {{ author.label }}
+                  {{ composeLeaderboardItemName(author.label) }}
                 </div>
                 <div class="amountMessages text-bold">
                   {{ author.value }}
@@ -132,6 +133,11 @@ props.topValues.forEach((_, idx) => {
     showTopValues.value[idx] = true
   }, 750 * idx)
 })
+
+function composeLeaderboardItemName(author: string) {
+  const split = author.split(' ')
+  return split.length > 1 ? split[0] + ` ${split[1][0]}` : author
+}
 </script>
 
 <style lang="scss" scoped>
@@ -142,10 +148,19 @@ h3 {
   font-weight: 600;
 }
 
+h1 {
+  font-size: 6rem;
+}
+
 :deep(.subtitle) {
   strong {
     color: $primary;
   }
+}
+
+.q-card {
+  width: 750px;
+  text-align: center;
 }
 
 .topValue {
@@ -180,14 +195,14 @@ h3 {
 
 @media (max-width: 768px) {
   // TODO: Just do this with typography
-  // h1 {
-  // font-size: 3.2rem;
-  // }
+  h1 {
+    font-size: 2.4rem;
+  }
 
-  // h3 {
-  // margin: 0;
-  // font-size: 1.8rem;
-  // }
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
 
   .slide {
     .q-card {
@@ -198,10 +213,13 @@ h3 {
   }
 
   .leaderboardItem {
-    text-align: center;
-    justify-content: center;
     border-right: none !important;
     border-bottom: 1px solid #e4e4e7;
+
+    &.leaderboardEmoji {
+      text-align: center;
+      justify-content: center;
+    }
 
     &:last-child {
       border-bottom: none;

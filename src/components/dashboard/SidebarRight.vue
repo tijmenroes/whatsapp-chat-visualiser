@@ -72,41 +72,44 @@
         </q-menu>
       </q-btn>
 
-      <q-intersection
-        transition="slide-up"
-        once
-        v-for="(summaryItem, summaryIdx) in summaryItems"
-        :key="summaryIdx"
-      >
-        <q-card class="summaryCard q-mt-md">
-          <q-card-section>
-            <div class="row justify-between items-center">
-              <div class="text-bold">
-                {{ summaryItem.title }}
+      <div class="row">
+        <q-intersection
+          transition="slide-up"
+          once
+          class="col-xs-12 col-sm-6 col-md-12"
+          v-for="(summaryItem, summaryIdx) in summaryItems"
+          :key="summaryIdx"
+        >
+          <q-card class="summaryCard q-mt-md">
+            <q-card-section>
+              <div class="row justify-between items-center">
+                <div class="text-bold">
+                  {{ summaryItem.title }}
+                </div>
+                <q-icon :name="summaryItem.icon" />
               </div>
-              <q-icon :name="summaryItem.icon" />
-            </div>
-            <div v-if="summaryItem.showValue">
-              <div
-                class="text-primary heading-3 text-bold"
-                :class="summaryItem.class"
-              >
-                {{ summaryItem.value }}
+              <div v-if="summaryItem.showValue">
+                <div
+                  class="text-primary heading-3 text-bold"
+                  :class="summaryItem.class"
+                >
+                  {{ summaryItem.value }}
+                </div>
+                <div class="text-muted">
+                  {{ summaryItem.subtitle }}
+                </div>
               </div>
-              <div class="text-muted">
-                {{ summaryItem.subtitle }}
-              </div>
-            </div>
 
-            <div
-              v-else
-              class="text-bold"
-            >
-              Not enough data!
-            </div>
-          </q-card-section>
-        </q-card>
-      </q-intersection>
+              <div
+                v-else
+                class="text-bold"
+              >
+                Not enough data!
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-intersection>
+      </div>
     </div>
 
     <q-dialog

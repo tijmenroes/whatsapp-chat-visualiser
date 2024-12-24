@@ -23,6 +23,7 @@
     "quasar": "^2.14.1",
     "swiper": "^11.0.5",
     "vue": "^3.3.8",
+    "vue-gtag": "^2.0.1",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

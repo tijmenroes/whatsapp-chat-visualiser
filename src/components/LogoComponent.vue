@@ -5,6 +5,6 @@
       alt="logo"
     />
 
-    <div class="text-bold text-primary">Whatsapp Analyzer</div>
+    <div class="text-bold text-primary">WhatsWrapped</div>
   </div>
 </template>

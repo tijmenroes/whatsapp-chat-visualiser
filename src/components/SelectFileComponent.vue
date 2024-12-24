@@ -135,6 +135,7 @@ import { useRouter } from 'vue-router'
 import JSZip from 'jszip'
 import * as Sentry from '@sentry/vue'
 import { Screen } from 'quasar'
+import { event } from 'vue-gtag'
 
 const file = ref<File | null>(null)
 const isMobile = computed(() => Screen.lt.md)
@@ -148,6 +149,7 @@ const isLoading = ref(false)
 
 async function onFileUploaded(file: File) {
   isLoading.value = true
+  event('file_upload')
   const ZIP_TYPES = ['application/zip', 'application/x-zip-compressed']
 
   if (!file.type) {

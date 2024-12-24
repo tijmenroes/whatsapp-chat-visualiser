@@ -196,7 +196,7 @@ export function analyseText(file: string) {
 }
 
 export async function startAnalysisFromFile() {
-  const chatLocation = import.meta.env.DEV ? '../../whatsapp-chat-visualiser/chat-small.copy2.txt' : '../../whatsapp-chat-visualiser/demo-log.txt'
+  const chatLocation = import.meta.env.DEV ? '../../whatsapp-chat-visualiser/chat-small.copy.txt' : '../../whatsapp-chat-visualiser/demo-log.txt'
 
   return fetch(chatLocation)
     .then((res) => res.text())

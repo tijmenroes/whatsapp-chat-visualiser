@@ -10,6 +10,7 @@ import { createPinia } from 'pinia'
 import router from './router'
 import './styles/main.scss'
 import * as Sentry from '@sentry/vue'
+import VueGtag from "vue-gtag";
 
 const pinia = createPinia()
 
@@ -38,4 +39,7 @@ app
   .use(HighchartsVue)
   .use(pinia)
   .use(router)
+  .use(VueGtag, {
+    config: { id: import.meta.env.VUE_APP_TITLE_GTAG_ID }
+  })
   .mount('#app')

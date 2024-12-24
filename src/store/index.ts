@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { startAnalysisFromFile, analyseText } from '../utils/baseScript'
+import { startAnalysisFromFile, analyseBatch } from '../utils/baseScriptBatch'
 import { Author, AuthorSettings, Event, SummaryItem } from '../utils/types'
 import { ref, computed, reactive } from 'vue'
+import { event } from 'vue-gtag'
 
 export const useStore = defineStore('global', () => {
   const authorsData = ref<Author[]>([])
@@ -11,6 +12,11 @@ export const useStore = defineStore('global', () => {
   const isGroupChat = computed(() => authorsData.value.length > 2)
 
   const summaryItems = ref<SummaryItem[]>()
+  const loadingInfo = ref({
+    isActive: false,
+    totalLines: 0,
+    progress: 0,
+  })
 
   function setSummaryItems(items: SummaryItem[]) {
     summaryItems.value = items
@@ -76,7 +82,8 @@ export const useStore = defineStore('global', () => {
   })
 
   async function getData() {
-    const { authors, events, startDate, endDate } = await startAnalysisFromFile()
+    const file = await startAnalysisFromFile()
+    const { authors, events, startDate, endDate } = await analyseChatString(file)
     authors.forEach((author) => {
       authorsSettings.value.push({
         index: author.authorIndex,
@@ -87,13 +94,48 @@ export const useStore = defineStore('global', () => {
 
     authorsData.value = authors
     eventsData.value = events
-    setFilterDate(startDate, endDate)
-    setMaxDates(startDate, endDate)
+    if (startDate && endDate) {
+      setFilterDate(startDate, endDate)
+      setMaxDates(startDate, endDate)
+    }
+  }
+
+  async function analyseChatString(chat: string) {
+    const state = { authors: [], events: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
+
+    // Batching might cut-off some messages. This is a trade-off for performance.
+    const batchSize = 330000
+    let batchIndex = 0
+    const lines = chat.split('\n')
+    const totalAmountBatches = Math.ceil(lines.length / batchSize)
+    loadingInfo.value.totalLines = lines.length
+    loadingInfo.value.isActive = lines.length > batchSize
+
+    const timeStart = new Date().getTime()
+
+    for (let i = 0; i < lines.length / batchSize; i++) {
+      const batch = lines.slice(i * batchSize, (i + 1) * batchSize)
+      batchIndex++
+      await analyseBatch(batch, state, batchIndex === totalAmountBatches)
+      loadingInfo.value.progress = batchIndex / totalAmountBatches
+
+      await new Promise((resolve) => setTimeout(resolve, 1))
+    }
+    event('file_analysed', {
+      total_lines: lines.length,
+      total_authors: state.authors.length,
+      total_events: state.events.length,
+      time_elapsed: new Date().getTime() - timeStart,
+    })
+
+    loadingInfo.value.isActive = false
+
+    return state
   }
 
   async function setStoreData(fileString: string) {
     authorsSettings.value = []
-    const { authors, events, startDate, endDate } = await analyseText(fileString)
+    const { authors, events, startDate, endDate } = await analyseChatString(fileString)
     authors.forEach((author) => {
       authorsSettings.value.push({
         index: author.authorIndex,
@@ -139,5 +181,6 @@ export const useStore = defineStore('global', () => {
     getData,
     maxDates,
     setAuthorsSettings,
+    loadingInfo,
   }
 })

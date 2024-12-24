@@ -104,11 +104,19 @@
       <section>
         <h2 class="text-bold text-center">Contact</h2>
         <p class="q-mt-lg">Have a question or suggestion or encounted any bugs? Feel free to contact us.</p>
-        <ContactForm />
+        <!-- <ContactForm /> -->
+        <q-btn
+          color="secondary"
+          @click="openMailWindow"
+        >
+          Send e-mail
+        </q-btn>
       </section>
     </div>
 
     <FooterComponent />
+
+    <LoadingInfo />
   </div>
 </template>
 
@@ -121,12 +129,17 @@ import { routeNames } from '@/config/routeNames'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
 import SelectFileComponent from '@/components/SelectFileComponent.vue'
-import ContactForm from '@/components/homepage/ContactForm.vue'
+import LoadingInfo from '@/components/homepage/LoadingInfo.vue'
+// import ContactForm from '@/components/homepage/ContactForm.vue'
 
 const router = useRouter()
 const store = useStore()
 
 const tutorial = ref()
+
+function openMailWindow() {
+  window.open('mailto:omgprivate@outlook.com?subject=Whatswrapped feedback')
+}
 
 // const benefits = [
 //   {

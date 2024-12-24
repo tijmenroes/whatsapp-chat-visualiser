@@ -73,14 +73,15 @@ const voteRegex = RegExp(/\((?<name>[0-9]) vote/)
 const pollOptionRegex = RegExp(/OPTION:(?<name>.*) \([0-9] vote/)
 const emojiRegex = /\p{Extended_Pictographic}/gu
 
-export function analyseText(file: string) {
-  const authors: Author[] = []
+export async function analyseBatch(lines: string[], state: { authors: Author[]; events: Event[]; polls: Poll[]; startDate?: string; endDate?: string; id: number }, isFinalBatch: boolean = false) {
+  console.log('analysing batch')
+  const { authors, events, polls } = state
+  // const authors: Author[] = []
 
-  const lines = file.split('\n')
   let authorIndex: number = 0
   let id: number = 0
-  const events: Event[] = []
-  const polls: Poll[] = []
+  // const events: Event[] = []
+  // const polls: Poll[] = []
   const pollIds: string[] = []
 
   const authorIds: Record<string, number> = {}
@@ -190,23 +191,39 @@ export function analyseText(file: string) {
     }
   }
 
-  const { authors: authorData, startDate, endDate } = formatDates(authors)
+  // This should only happen for the batch
+  // see where this fits in
 
-  return { authors: authorData, events, startDate, endDate }
+  if (isFinalBatch) {
+    console.log('final batch')
+    console.log('authors:', authors)
+    const { authors: authorData } = formatDates(authors)
+    console.log('authorData:', authorData)
+    const { startDate, endDate } = getStartEndDates(authorData)
+    state.authors = authorData
+    state.startDate = startDate
+    state.endDate = endDate
+    state.events = events
+    state.polls = polls
+  }
+  return
 }
 
-export async function startAnalysisFromFile() {
-  const chatLocation = import.meta.env.DEV ? '../../whatsapp-chat-visualiser/chat-small.copy.txt' : '../../whatsapp-chat-visualiser/demo-log.txt'
+export async function startAnalysisFromFile(): Promise<string> {
+  const chatLocation = import.meta.env.DEV ? '../../chat-small.copy.txt' : '../../demo-log.txt'
 
+  // const state = { authors: [], events: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
+
+  console.time('Analyse batch')
+  console.time('total time')
   return fetch(chatLocation)
     .then((res) => res.text())
-    .then((text) => {
-      return analyseText(text)
+    .then(async (text) => {
+      return text
     })
 }
 
 function formatDates(authors: Author[]) {
-  console.log(authors)
   // Change the date format, if a different format is used
   if (
     !authors.every((item) => {
@@ -226,11 +243,17 @@ function formatDates(authors: Author[]) {
     // return { authors, startDate: '', endDate: '' }
   }
 
+  return { authors }
+}
+
+function getStartEndDates(authors: Author[]) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const allDates = authors.flatMap((author) => author.messages.map((message) => message.date)).sort(compareFn)
   const startDate = allDates[0]
   const endDate = allDates[allDates.length - 1]
 
-  return { authors, startDate, endDate }
+  console.log('start:', startDate)
+  console.log('end:', endDate)
+  return { startDate, endDate }
 }

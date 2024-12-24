@@ -6,6 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import { startAnalysisFromFile } from '../utils/baseScript'
+import { startAnalysisFromFile } from '../utils/baseScriptBatch'
 startAnalysisFromFile()
+
+// Probably no longer auto-starting the analysis, so we need to copy store content here.
 </script>

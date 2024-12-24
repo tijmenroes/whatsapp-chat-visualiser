@@ -11,7 +11,7 @@ import router from './router'
 import './styles/main.scss'
 import * as Sentry from '@sentry/vue'
 import VueGtag from 'vue-gtag'
-import { VueReCaptcha } from 'vue-recaptcha-v3'
+// import { VueReCaptcha } from 'vue-recaptcha-v3'
 
 const pinia = createPinia()
 
@@ -40,8 +40,7 @@ app
   .use(HighchartsVue)
   .use(pinia)
   .use(router)
-  // .use(VueReCaptcha, { siteKey: '6LcKFBcaAAAAABi8U9SedTJ4yEeoSzdJI9cKXxrG' })
-  .use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_SITE_KEY, loaderOptions: { autoHideBadge: true, useReCaptchaNet: true } })
+  // .use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_SITE_KEY, loaderOptions: { autoHideBadge: true } })
   .use(VueGtag, {
     config: { id: import.meta.env.VITE_GTAG_ID },
   })

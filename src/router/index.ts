@@ -3,7 +3,7 @@ import ScriptPage from '../views/ScriptPage.vue'
 import FileScanned from '../views/FileScanned.vue'
 import Highlights from '../views/HighlightsPage.vue'
 import DashboardView from '../views/DashboardView.vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { routeNames } from '../config/routeNames'
 import { useStore } from '../store'
 
@@ -56,11 +56,7 @@ const routes = [
       },
     ],
   },
-  {
-    path: '/script',
-    name: routeNames.script,
-    component: ScriptPage,
-  },
+
   {
     path: '/file-scanned',
     name: routeNames.fileScanned,
@@ -72,9 +68,16 @@ const routes = [
     component: Highlights,
   },
 ]
+if (!import.meta.env.PROD) {
+  routes.push({
+    path: '/script',
+    name: routeNames.script,
+    component: ScriptPage,
+  })
+}
 
 const router = createRouter({
-  history: createWebHashHistory('/whatsapp-chat-visualiser'),
+  history: createWebHistory('/'),
   routes,
 })
 

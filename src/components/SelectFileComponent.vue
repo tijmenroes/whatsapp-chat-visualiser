@@ -77,6 +77,7 @@
     >
       <input
         type="file"
+        accept=".zip, .txt"
         @change="handleMobileUpload"
       />
 

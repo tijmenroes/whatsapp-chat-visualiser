@@ -182,14 +182,14 @@ export const useStore = defineStore('global', () => {
 
 function detectLanguage(firstLine: string) {
   const encryptionMessages = {
-    'Berichten en gesprekken worden end-to-end versleuteld.': 'nl',
+    'worden end-to-end versleuteld': 'nl',
     'Messages and calls are end-to-end encrypted.': 'en',
     'I messaggi e le chiamate sono crittografati end-to-end.': 'it',
-    'Los mensajes y llamadas están cifrados de extremo a extremo.': 'es',
-    'Die Nachrichten und Anrufe sind Ende-zu-Ende-verschlüsselt.': 'de',
+    'Los mensajes y las llamadas están cifrados de extremo a extremo': 'es',
+    'sind Ende-zu-Ende-verschlüsselt': 'de',
     'Les messages et appels sont chiffrés de bout en bout.': 'fr',
-    'As mensagens e chamadas são criptografadas de ponta a ponta. Ninguém fora deste chat, nem mesmo o WhatsApp, pode lê-las ou ouvi-las.': 'pt-br', // Brazilian Portuguese
-    'As mensagens e chamadas estão encriptadas de ponta a ponta. Ninguém fora deste chat, nem mesmo o WhatsApp, pode lê-las ou ouvi-las.': 'pt-pt', // European Portuguese
+    'criptografadas de ponta a ponta. ': 'pt-br', // Brazilian Portuguese
+    'encriptadas de ponta a ponta. ': 'pt-pt', // European Portuguese
     'Сообщения и звонки защищены сквозным шифрованием. Никто вне этого чата, даже WhatsApp, не может их прочитать или прослушать.': 'ru',
   }
 
@@ -201,8 +201,10 @@ function detectLanguage(firstLine: string) {
     }
   })
   if (!detectedLanguage) {
+    console.log('Language not detected:', firstLine)
     event('language_not_detected', { firstLine, navigatorLanguage: navigator.languages })
+  } else {
+    console.log('Detected language:', detectedLanguage)
   }
-  console.log('Detected language:', detectedLanguage)
   return detectedLanguage
 }

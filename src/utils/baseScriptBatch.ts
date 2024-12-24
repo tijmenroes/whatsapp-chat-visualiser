@@ -74,7 +74,6 @@ const pollOptionRegex = RegExp(/OPTION:(?<name>.*) \([0-9] vote/)
 const emojiRegex = /\p{Extended_Pictographic}/gu
 
 export async function analyseBatch(lines: string[], state: { authors: Author[]; events: Event[]; polls: Poll[]; startDate?: string; endDate?: string; id: number }, isFinalBatch: boolean = false) {
-  console.log('analysing batch')
   const { authors, events, polls } = state
   // const authors: Author[] = []
 
@@ -196,9 +195,7 @@ export async function analyseBatch(lines: string[], state: { authors: Author[]; 
 
   if (isFinalBatch) {
     console.log('final batch')
-    console.log('authors:', authors)
     const { authors: authorData } = formatDates(authors)
-    console.log('authorData:', authorData)
     const { startDate, endDate } = getStartEndDates(authorData)
     state.authors = authorData
     state.startDate = startDate
@@ -253,7 +250,5 @@ function getStartEndDates(authors: Author[]) {
   const startDate = allDates[0]
   const endDate = allDates[allDates.length - 1]
 
-  console.log('start:', startDate)
-  console.log('end:', endDate)
   return { startDate, endDate }
 }

@@ -204,6 +204,10 @@ h1 {
     font-size: 1.2rem;
   }
 
+  .subtitle {
+    font-size: 1.2rem;
+  }
+
   .slide {
     .q-card {
       width: 100%;

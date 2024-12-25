@@ -5,7 +5,10 @@
         <EventsTable :data="events" />
       </DashboardCard>
 
-      <div class="q-ma-md q-pt-xl">
+      <div
+        class="q-ma-md q-pt-xl"
+        v-if="polls.length"
+      >
         <h4>Polls</h4>
 
         <div class="row">

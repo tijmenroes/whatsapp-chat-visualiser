@@ -113,6 +113,12 @@ const drawer = ref(false)
     max-width: 100vw;
   }
 
+  .dashboardContainer {
+    overflow-y: hidden;
+    max-height: unset;
+    padding-top: 0;
+  }
+
   .sidebarRight,
   .dashboardView {
     padding: 12px;

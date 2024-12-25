@@ -24,6 +24,7 @@
         />
       </template>
 
+      <!-- TODO: Refactor with a v-for -->
       <q-carousel-slide
         :name="1"
         class="slide"
@@ -41,7 +42,7 @@
         <CarouselSlideCard
           v-if="slide == 2"
           @slide-next="slide++"
-          :top-values="cardsContent[1]"
+          :top-values="cardsContent[5]"
         ></CarouselSlideCard>
       </q-carousel-slide>
       <q-carousel-slide
@@ -49,6 +50,17 @@
         class="slide"
       >
         <CarouselSlideCard
+          v-if="slide == 3"
+          @slide-next="slide++"
+          :top-values="cardsContent[1]"
+        ></CarouselSlideCard>
+      </q-carousel-slide>
+      <q-carousel-slide
+        :name="4"
+        class="slide"
+      >
+        <CarouselSlideCard
+          v-if="slide == 4"
           @slide-next="slide++"
           :top-values="cardsContent[2]"
           is-emoji
@@ -56,17 +68,29 @@
       </q-carousel-slide>
 
       <q-carousel-slide
-        :name="4"
+        :name="5"
         class="slide"
       >
         <CarouselSlideCard
+          v-if="slide == 5"
           @slide-next="slide++"
           :top-values="cardsContent[3]"
         ></CarouselSlideCard>
       </q-carousel-slide>
 
       <q-carousel-slide
-        :name="5"
+        :name="6"
+        class="slide"
+      >
+        <CarouselSlideCard
+          v-if="slide == 6"
+          @slide-next="slide++"
+          :top-values="cardsContent[6]"
+        ></CarouselSlideCard>
+      </q-carousel-slide>
+
+      <q-carousel-slide
+        :name="7"
         class="slide"
       >
         <CarouselSlideCard
@@ -90,7 +114,6 @@ import useTextLengthSeries from '@/composables/useTextLengthSeries.ts'
 const store = useStore()
 
 const slide = ref(1)
-const fullscreen = ref(true)
 const carousel = ref()
 
 // Ignore for now
@@ -109,6 +132,25 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'messages',
+    },
+  ],
+
+  5: [
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.title,
+      value: 'The first message...',
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
+      value: `${firstMessage.value.message}`,
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
+      value: `Sent on: ${firstMessage.value.date}`,
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
+      value: `How time flies...`,
     },
   ],
 
@@ -184,12 +226,28 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
       values: textLength.value?.slice(1, 4).map((author) => ({ label: author.name, value: author.data[0] })) || [],
     },
   ],
+
+  6: [
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.title,
+      value: 'Attachment queen alert! Guess who loves sending media the most?',
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.value,
+      value: mostAttachmentsSentBy.value?.name,
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
+      value: `Sent a total of ${mostAttachmentsSentBy.value?.messages.length} attachments`,
+    },
+  ],
 }))
 
 // Why did I use authorsData instead of messagesPerAuthor?
 const authorsDataAllMessages = computed(() => store.authorsData)
 const authorsDataMessages = computed(() => store.authorsDataMessages)
 const messagesContainingEmoji = computed(() => store.messagesContainingEmoji)
+const attachmentMessages = computed(() => store.messagesContainginAttachments)
 const totalMessagesSent = computed(() => authorsDataAllMessages.value.map((author) => author.messages.length).reduce((acc, curr) => acc + curr, 0))
 const messagesPerAuthor = computed(() => authorsDataAllMessages.value.map((author) => ({ label: author.name, value: author.messages.length })).sort((a, b) => b.value - a.value))
 const messagesRanking = computed(() => messagesPerAuthor.value.filter((_, idx) => idx > 0 && idx < 4))
@@ -215,6 +273,18 @@ const filterDate = computed(() => store.filterDate)
 const totalDays = computed(() => (filterDate.value?.from && filterDate.value?.to ? Math.abs(filterDate.value?.to.getTime() - filterDate.value?.from.getTime()) / (1000 * 60 * 60 * 24) : 0))
 
 const messagesPerAuthorTimed = computed(() => messagesPerAuthor.value.map((author) => ({ label: author.label, value: author.value / totalDays.value })))
+const firstMessage = computed(() => {
+  const allMessages = authorsDataMessages.value.flatMap((author) => author.messages)
+  return allMessages.sort((a, b) => a.id - b.id)[0]
+})
+
+const mostAttachmentsSentBy = computed(() => {
+  const sortedAttachments = [...attachmentMessages.value].sort((a, b) => b.messages.length - a.messages.length)
+  return sortedAttachments.length > 0 ? sortedAttachments[0] : null
+})
+console.log(mostAttachmentsSentBy.value)
+// console.log(authorsDataAllMessages.value)
+// const firstMessage = computed(() => authorsDataAllMessages.value.map((author) => author.messages[0].date).sort((a, b) => a.getTime() - b.getTime())[0])
 </script>
 
 <style scoped lang="scss">

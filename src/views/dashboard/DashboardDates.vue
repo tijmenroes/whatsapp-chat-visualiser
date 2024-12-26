@@ -17,6 +17,13 @@
         :categories="messagesPerHour.categories"
       />
     </DashboardCard>
+
+    <DashboardCard title="Heatmap of messages per day and hour">
+      <HeatMap
+        :series="messagesPerDayHour.series"
+        :categories="messagesPerDayHour.categories"
+      />
+    </DashboardCard>
   </div>
 </template>
 
@@ -24,6 +31,7 @@
 import { computed } from 'vue'
 import TimeSlide from '@/components/TimeSlide.vue'
 import BarChart from '@/components/BarChart.vue'
+import HeatMap from '@/components/HeatMap.vue'
 import { useStore } from '@/store'
 import { useSummaryStore } from '@/store/summary'
 import { SUMMARY_COLLECTION } from '@/config/summaryItems'
@@ -35,6 +43,7 @@ const summaryStore = useSummaryStore()
 const allMessages = computed(() => store.messagesPerAuthor)
 summaryStore.setSummaryState(SUMMARY_COLLECTION.dates)
 
-const messagesPerDay = computed(() => messagePerDaySeries(allMessages.value, false))
-const messagesPerHour = computed(() => messagePerDaySeries(allMessages.value, true))
+const messagesPerDay = computed(() => messagePerDaySeries(allMessages.value, 'day'))
+const messagesPerHour = computed(() => messagePerDaySeries(allMessages.value, 'hour'))
+const messagesPerDayHour = computed(() => messagePerDaySeries(allMessages.value, 'dayHour'))
 </script>

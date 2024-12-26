@@ -3,6 +3,7 @@ import { startAnalysisFromFile, analyseBatch } from '../utils/baseScriptBatch'
 import { Author, AuthorSettings, Event, Poll, SummaryItem } from '../utils/types'
 import { ref, computed, reactive } from 'vue'
 import { event } from 'vue-gtag'
+import * as Sentry from '@sentry/vue'
 
 export const useStore = defineStore('global', () => {
   const authorsData = ref<Author[]>([])
@@ -110,11 +111,20 @@ export const useStore = defineStore('global', () => {
       await new Promise((resolve) => setTimeout(resolve, 1))
     }
     event('file_analysed', {
-      total_lines: lines.length,
-      total_authors: state.authors.length,
-      total_events: state.events.length,
+      total_lines: determineRange(lines.length),
       lang,
-      time_elapsed: new Date().getTime() - timeStart,
+    })
+
+    Sentry.captureMessage('File analysed', {
+      level: 'info', // Severity level (info, warning, error, etc.)
+      tags: { event: 'file_analysed' }, // Add tags for filtering in Sentry
+      extra: {
+        total_lines: lines.length,
+        total_authors: state.authors.length,
+        total_events: state.events.length,
+        lang,
+        time_elapsed: new Date().getTime() - timeStart,
+      },
     })
 
     loadingInfo.value.isActive = false
@@ -124,7 +134,6 @@ export const useStore = defineStore('global', () => {
 
   async function setStoreData(fileString: string) {
     authorsSettings.value = []
-    // const { authors, events, startDate, endDate } = await analyseChatString(fileString)
     const { authors, events, startDate, endDate, polls } = await analyseChatString(fileString)
     authors.forEach((author) => {
       authorsSettings.value.push({
@@ -137,11 +146,10 @@ export const useStore = defineStore('global', () => {
     authorsData.value = authors
     eventsData.value = events
     pollsData.value = polls
-    if (startDate && endDate) {
+    if (startDate && endDate && startDate !== 'Invalid Date' && endDate !== 'Invalid Date') {
       setFilterDate(startDate, endDate)
       setMaxDates(startDate, endDate)
     }
-    console.log(polls)
 
     return hasValidChatEntered.value
   }
@@ -207,4 +215,11 @@ function detectLanguage(firstLine: string) {
     console.log('Detected language:', detectedLanguage)
   }
   return detectedLanguage
+}
+
+function determineRange(lineCount: number) {
+  if (lineCount <= 15000) return '1-15000'
+  if (lineCount <= 100000) return '15000-100000'
+  if (lineCount <= 500000) return '100000-500000'
+  return '500000+'
 }

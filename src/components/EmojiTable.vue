@@ -41,7 +41,7 @@ const columns: QTableColumn[] = [
     field: 'emoji',
     align: 'left',
   },
-  { name: 'value', align: 'left', label: 'Aantal', field: 'value', sortable: true },
+  { name: 'value', align: 'left', label: 'Amount', field: 'value', sortable: true },
 ]
 
 const rows = computed(() => {

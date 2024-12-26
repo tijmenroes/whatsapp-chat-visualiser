@@ -1,6 +1,8 @@
 
 
-$primary   : #6DED90
+$primary-light   : #6DED90
+$primary-dark : #3de76c
+$primary : $primary-dark
 $secondary : #F4F4F5
 $bg-primary-10: rgba(109, 237, 144, 0.1)
 $bg-light-grey: rgba(244, 244, 245, 0.50)
@@ -23,3 +25,19 @@ $screen-xs: 480px
 // // $negative  : #C10015
 // // $info      : #31CCEC
 // // $warning   : #F2C037
+
+
+$light-primary: darkgreen
+$dark-primary: lightgreen
+
+:root
+  --primary: #{$primary-dark}
+  --q-primary: #{$primary-dark}
+
+
+@media (prefers-color-scheme: dark)
+  :root
+    --primary: #{$primary-light}
+    --q-primary: #{$primary-light}
+
+

@@ -153,6 +153,12 @@ h1 {
 }
 
 :deep(.subtitle) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 12;
+  line-clamp: 12;
+  -webkit-box-orient: vertical;
+
   strong {
     color: $primary;
   }

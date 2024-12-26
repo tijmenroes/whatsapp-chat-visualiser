@@ -94,6 +94,17 @@
         class="slide"
       >
         <CarouselSlideCard
+          v-if="slide == 7"
+          @slide-next="slide++"
+          :top-values="cardsContent[7]"
+        ></CarouselSlideCard>
+      </q-carousel-slide>
+
+      <q-carousel-slide
+        :name="8"
+        class="slide"
+      >
+        <CarouselSlideCard
           @slide-reset="slide = 1"
           is-last
           :top-values="cardsContent[4]"
@@ -110,6 +121,7 @@ import CarouselSlideCard from '../components/highlights/CarouselSlideCard.vue'
 import { CAROUSEL_CONTENT_OPTIONS } from '../config/carouselContentOptions'
 import { TopValueEntry } from '@/utils/types'
 import useTextLengthSeries from '@/composables/useTextLengthSeries.ts'
+import { getHighestStreak } from '@/utils/getHighestStreak'
 
 const store = useStore()
 
@@ -241,6 +253,21 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
       value: `Sent a total of ${mostAttachmentsSentBy.value?.messages.length} attachments`,
     },
   ],
+
+  7: [
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.title,
+      value: 'Highest streak! (consecutive days with messages)',
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.value,
+      value: `${highestStreak.maxStreak} days`,
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
+      value: `From ${new Date(highestStreak.start).toLocaleDateString()} to ${new Date(highestStreak.end).toLocaleDateString()}`,
+    },
+  ],
 }))
 
 // Why did I use authorsData instead of messagesPerAuthor?
@@ -282,9 +309,8 @@ const mostAttachmentsSentBy = computed(() => {
   const sortedAttachments = [...attachmentMessages.value].sort((a, b) => b.messages.length - a.messages.length)
   return sortedAttachments.length > 0 ? sortedAttachments[0] : null
 })
-console.log(mostAttachmentsSentBy.value)
-// console.log(authorsDataAllMessages.value)
-// const firstMessage = computed(() => authorsDataAllMessages.value.map((author) => author.messages[0].date).sort((a, b) => a.getTime() - b.getTime())[0])
+const allDates = [...new Set(store.messagesPerAuthor.flatMap((author) => author.messages.map((message) => new Date(message.date).getTime())).sort((a, b) => a - b))]
+const highestStreak = getHighestStreak(allDates)
 </script>
 
 <style scoped lang="scss">

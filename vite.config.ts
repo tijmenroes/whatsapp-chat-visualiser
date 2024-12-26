@@ -7,7 +7,7 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 // import 'quasar/src/css/index.sass'
 
 export default defineConfig({
-  base: '/whatsapp-chat-visualiser/',
+  base: '/',
 
   resolve: {
     alias: {

@@ -3,6 +3,7 @@ import { SummaryItem } from '../utils/types'
 import { ref, computed } from 'vue'
 import { useStore } from './index'
 import { SUMMARY_COLLECTION } from '@/config/summaryItems'
+import { getHighestStreak } from '@/utils/getHighestStreak'
 
 export const useSummaryStore = defineStore('summary', () => {
   const globalStore = useStore()
@@ -10,7 +11,7 @@ export const useSummaryStore = defineStore('summary', () => {
   function pickSummaryItems() {
     switch (summaryState.value) {
       case SUMMARY_COLLECTION.general:
-        return [totalMessagesSentItem.value, mostMessagesSentItem.value, totalEmojiCount.value]
+        return [totalMessagesSentItem.value, mostMessagesSentItem.value, totalEmojiCount.value, highestStreakItem.value]
       case SUMMARY_COLLECTION.dates:
         return [totalMessagesSentItem.value, mostMessagesSentItem.value]
       case SUMMARY_COLLECTION.emojis:
@@ -38,6 +39,7 @@ export const useSummaryStore = defineStore('summary', () => {
   const { totalEmojiCount, biggestEmojiUserItem } = emojiSummaryHandler()
   const { totalMessagesSentItem, mostMessagesSentItem } = summaryItemsHandler()
   const { totalAttachmentsSentItem, mostAttachmentsSentItem } = attachmentSummaryHandler()
+  const { highestStreakItem } = generalItemsHandler()
 
   const totalDays = computed(() => globalStore.totalDays)
   const allMessages = computed(() => globalStore.messagesPerAuthor)
@@ -135,6 +137,22 @@ export const useSummaryStore = defineStore('summary', () => {
     }))
 
     return { totalMessagesSentItem, mostMessagesSentItem }
+  }
+
+  function generalItemsHandler() {
+    const allDates = [...new Set(globalStore.messagesPerAuthor.flatMap((author) => author.messages.map((message) => new Date(message.date).getTime())).sort((a, b) => a - b))]
+    const highestStreak = getHighestStreak(allDates)
+    const highestStreakItem = computed<SummaryItem>(() => ({
+      title: 'Highest streak',
+      value: `${highestStreak.maxStreak} days`,
+      icon: 'emoji_events',
+      subtitle: `From ${new Date(highestStreak.start).toLocaleDateString()} to ${new Date(highestStreak.end).toLocaleDateString()}`,
+      class: '',
+      showValue: !!highestStreak.maxStreak,
+    }))
+    console.log(highestStreakItem.value)
+
+    return { highestStreakItem }
   }
 
   return {

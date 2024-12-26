@@ -85,6 +85,12 @@ if (store.isGroupChat) {
   border: 2px solid transparent;
 }
 
+:deep(.LogoComponent) {
+  img {
+    max-width: 150px !important;
+  }
+}
+
 :deep(.q-item) {
   border-radius: 8px;
   border-bottom: 3px solid transparent;

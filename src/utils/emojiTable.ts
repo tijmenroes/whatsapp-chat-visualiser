@@ -16,11 +16,11 @@ export const EMOJI_TABLE_ROWS: QTableColumn[] = [
   },
   {
     name: 'author',
-    label: 'Door wie',
+    label: 'Sent by',
     field: 'author',
     align: 'left',
   },
-  { name: 'value', align: 'right', label: 'Aantal', field: 'value', sortable: true },
+  { name: 'value', align: 'right', label: 'Amount', field: 'value', sortable: true },
 ]
 
 export const EMOJI_BASIC_TABLE_ROWS: QTableColumn[] = [
@@ -31,5 +31,5 @@ export const EMOJI_BASIC_TABLE_ROWS: QTableColumn[] = [
     align: 'left',
   },
 
-  { name: 'value', align: 'left', label: 'Aantal', field: 'value', sortable: true },
+  { name: 'value', align: 'left', label: 'Amount', field: 'value', sortable: true },
 ]

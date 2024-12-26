@@ -1,28 +1,34 @@
 <template>
   <div class="SidebarRight">
-    <div class="flex justify-end q-gutter-sm q-mb-md">
-      <q-btn
-        color="secondary"
-        to="/highlights"
-      >
-        <q-icon
-          name="thumb_up"
-          size="xs"
-          class="q-mr-sm"
-        />
-        View highlights
-      </q-btn>
-      <q-btn
-        @click="showwSettings = !showwSettings"
-        color="secondary"
-      >
-        <q-icon
-          name="settings"
-          size="xs"
-          class="q-mr-sm"
-        />
-        Settings
-      </q-btn>
+    <div class="row justify-end q-col-gutter-sm q-mb-md">
+      <div class="col-xs-6 col-sm-6 col-md-12 col-lg-6">
+        <q-btn
+          color="secondary"
+          to="/highlights"
+          class="full-width q-mr-sm"
+        >
+          <q-icon
+            name="thumb_up"
+            size="xs"
+            class="q-mr-sm"
+          />
+          View highlights
+        </q-btn>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-12 col-lg-6">
+        <q-btn
+          @click="showwSettings = !showwSettings"
+          color="secondary"
+          class="full-width"
+        >
+          <q-icon
+            name="settings"
+            size="xs"
+            class="q-mr-sm"
+          />
+          Settings
+        </q-btn>
+      </div>
     </div>
     <div class="column">
       <div class="q-pb-sm">{{ formatDate(date) }}</div>

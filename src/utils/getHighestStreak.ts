@@ -16,11 +16,11 @@ export function getHighestStreak(times: number[]): { maxStreak: number; start: n
       currentStreak++
     } else {
       if (currentStreak > maxStreak) {
-        start = times[i]
-        end = times[i + currentStreak]
+        start = times[i - currentStreak]
+        end = times[i - 1]
+        maxStreak = currentStreak
       }
 
-      maxStreak = Math.max(maxStreak, currentStreak)
       currentStreak = 1
     }
   }

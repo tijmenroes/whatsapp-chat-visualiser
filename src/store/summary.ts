@@ -11,7 +11,7 @@ export const useSummaryStore = defineStore('summary', () => {
   function pickSummaryItems() {
     switch (summaryState.value) {
       case SUMMARY_COLLECTION.general:
-        return [totalMessagesSentItem.value, mostMessagesSentItem.value, totalEmojiCount.value, highestStreakItem.value]
+        return [totalMessagesSentItem.value, totalEmojiCount.value, highestStreakItem.value]
       case SUMMARY_COLLECTION.dates:
         return [totalMessagesSentItem.value, mostMessagesSentItem.value]
       case SUMMARY_COLLECTION.emojis:
@@ -140,8 +140,8 @@ export const useSummaryStore = defineStore('summary', () => {
   }
 
   function generalItemsHandler() {
-    const allDates = [...new Set(globalStore.messagesPerAuthor.flatMap((author) => author.messages.map((message) => new Date(message.date).getTime())).sort((a, b) => a - b))]
-    const highestStreak = getHighestStreak(allDates)
+    const allDates = computed(() => [...new Set(globalStore.messagesPerAuthor.flatMap((author) => author.messages.map((message) => new Date(message.date).getTime())).sort((a, b) => a - b))])
+    const highestStreak = getHighestStreak(allDates.value)
     const highestStreakItem = computed<SummaryItem>(() => ({
       title: 'Highest streak',
       value: `${highestStreak.maxStreak} days`,

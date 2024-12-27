@@ -1,17 +1,16 @@
 <template>
   <div class="container">
-    <Chart :options="options" />
+    <highcharts :options="options" />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { reactive, computed } from 'vue'
-import Highcharts from 'highcharts'
 import hcHeatmap from 'highcharts/modules/heatmap'
-import { Chart } from 'highcharts-vue'
-hcHeatmap(Highcharts)
+// import { Chart } from 'highcharts-vue'
 
+hcHeatmap
 const props = defineProps({
   series: {
     type: Object as PropType<{ name: string; data: number[] }[]>,

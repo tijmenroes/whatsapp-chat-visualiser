@@ -12,7 +12,7 @@
         class="text-left"
         :key="idx"
       >
-        <b>{{ item.votes }} votes:</b>
+        <!-- <b>{{ item.votes }} votes:</b> -->
         {{ item.option }}
       </div>
     </q-card-section>
@@ -33,7 +33,6 @@ const props = defineProps({
 })
 
 const store = useStore()
-console.log(store.authorsSettings)
 // Maybe also filter on show?
 const authorName = computed(() => store.authorsSettings.find((author) => props.poll.authorId === author.index))
 </script>

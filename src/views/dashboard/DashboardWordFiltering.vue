@@ -66,7 +66,7 @@ import { useSummaryStore } from '@/store/summary'
 import { SUMMARY_COLLECTION } from '@/config/summaryItems'
 
 const store = useStore()
-const filterWords = ref(['the'])
+const filterWords = ref(['shit'])
 const data = computed(() => store.authorsDataMessages)
 
 const summaryStore = useSummaryStore()

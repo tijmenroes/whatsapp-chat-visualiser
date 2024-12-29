@@ -67,13 +67,15 @@ const router = useRouter()
 const isDragging = ref(false)
 
 function onFileUploaded(file: File) {
+  console.time('file loaded')
   const reader = new FileReader()
 
   reader.onload = async () => {
     // console.log(reader.result)
+    console.timeEnd('file loaded')
     console.log('loaded file')
-    await store.setStoreData(reader.result as string)
-    router.push('/file-scanned')
+    // await store.setStoreData(reader.result as string)
+    // router.push('/file-scanned')
   }
   reader.readAsText(file)
 }

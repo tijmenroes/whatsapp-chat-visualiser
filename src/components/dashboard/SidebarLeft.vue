@@ -30,6 +30,13 @@
           </q-item>
         </q-intersection>
       </q-list>
+
+      <q-btn
+        class="q-mt-xl"
+        color="secondary"
+        label="Upload another chat"
+        to="/#upload"
+      />
     </div>
   </div>
 </template>
@@ -68,10 +75,11 @@ const navItems = [
   },
 ]
 
-if (store.isGroupChat) {
+console.log(store.pollsData)
+if (store.pollsData.length) {
   navItems.push({
     icon: 'group',
-    title: 'Group events',
+    title: 'Events',
     route: routeNames.dashboard_group,
   })
 }

@@ -12,7 +12,7 @@
 
     <DashboardCard
       is-small
-      title="Average attachments sent per message"
+      title="Percentage of messages with attachments"
     >
       <!-- <AttachmentsChart
         :data="attachmentMessages"

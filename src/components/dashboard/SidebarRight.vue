@@ -120,12 +120,12 @@
 
     <q-dialog
       v-model="showwSettings"
-      title="Participant settings"
+      title="Chat analysis settings"
       :maximized="isMobile"
     >
       <q-card class="settingsContent">
         <q-card-section class="row justify-between items-center full-width">
-          <div class="heading-4 text-bold">Participant settings</div>
+          <div class="heading-4 text-bold">Chat analysis settings</div>
           <q-icon
             name="close"
             size="md"

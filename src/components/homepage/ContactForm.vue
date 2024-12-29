@@ -50,11 +50,12 @@ const form = ref({
   message: '',
 })
 const hint = ref('')
-
 const isCaptchaVerified = ref(true)
+// @ts-expect-error - This is valid, not sure why TS is complaining
 const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
 
 const recaptcha = async () => {
+  if (!recaptchaLoaded) await recaptchaLoaded()
   await recaptchaLoaded()
 
   const token = await executeRecaptcha('login')
@@ -93,6 +94,7 @@ async function handleSubmit() {
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
         Authorization: `Bearer ${import.meta.env.VITE_MAILERSEND_API_TOKEN}`,
+        cors: 'no-cors',
       },
       body: JSON.stringify(payload),
     })

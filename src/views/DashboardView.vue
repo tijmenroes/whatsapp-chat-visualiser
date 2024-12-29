@@ -70,9 +70,14 @@ const drawer = ref(false)
 }
 
 .dashboardContainer {
+  // overflow-y: scroll;
+  // max-height: 100vh;
+  padding-top: 32px;
+}
+
+.contentContainer {
   overflow-y: scroll;
   max-height: 100vh;
-  padding-top: 32px;
 }
 
 .mobileToolbar,
@@ -111,6 +116,7 @@ const drawer = ref(false)
     padding-left: 0;
     padding-right: 0;
     max-width: 100vw;
+    max-height: unset;
   }
 
   .dashboardContainer {

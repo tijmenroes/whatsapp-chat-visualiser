@@ -154,11 +154,11 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
     },
     {
       type: CAROUSEL_CONTENT_OPTIONS.subtitle,
-      value: `${firstMessage.value.message}`,
+      value: `${firstMessage.value?.message}`,
     },
     {
       type: CAROUSEL_CONTENT_OPTIONS.subtitle,
-      value: `Sent on: ${firstMessage.value.date}`,
+      value: `Sent on: ${firstMessage.value?.date}`,
     },
     {
       type: CAROUSEL_CONTENT_OPTIONS.subtitle,

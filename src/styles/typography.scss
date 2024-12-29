@@ -8,9 +8,19 @@ body {
 }
 
 .isEmoji {
-  font-family: 'Noto Color Emoji', sans-serif;
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'EmojiOne', sans-serif;
   font-weight: 400;
   font-style: normal;
+
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block; /* Ensures it behaves like an inline element */
+  text-align: center;
+  line-height: 1; /* Makes sure the emoji is aligned correctly */
+
+  &.fallback {
+    font-family: sans-serif !important;
+  }
 }
 
 h1,

@@ -79,6 +79,15 @@ if (!import.meta.env.PROD) {
 const router = createRouter({
   history: createWebHistory('/'),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (to.hash) {
+      return { el: to.hash }
+    } else if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
 })
 
 router.beforeEach((to, _, next) => {

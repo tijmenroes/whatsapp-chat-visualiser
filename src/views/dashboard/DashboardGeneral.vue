@@ -125,4 +125,20 @@ summaryStore.setSummaryState(SUMMARY_COLLECTION.general)
 
 const textLength = computed(() => useTextLengthSeries(data.value, true))
 const attachments = computed(() => useAttachmentSeries(messagesContainginAttachments.value, false))
+
+// test
+// onMounted(() => {
+//   function checkEmojiRendering() {
+//     const emojiElements = document.querySelectorAll('.isEmoji')
+
+//     emojiElements.forEach((el) => {
+//       // const testEmoji = document.createElement('span')
+//       if (el.textContent == '🥲') {
+//         console.log(el)
+//         el.classList.add('fallback')
+//       }
+//     })
+//   }
+//   checkEmojiRendering()
+// })
 </script>

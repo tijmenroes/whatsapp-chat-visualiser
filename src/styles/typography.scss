@@ -11,17 +11,29 @@ body {
   font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'EmojiOne', sans-serif;
   font-weight: 400;
   font-style: normal;
-
-  font-weight: 400;
-  font-style: normal;
   display: inline-block; /* Ensures it behaves like an inline element */
   text-align: center;
   line-height: 1; /* Makes sure the emoji is aligned correctly */
 
   &.fallback {
-    font-family: sans-serif !important;
+    font-family: sans-serif;
   }
 }
+
+@supports (-webkit-touch-callout: none) {
+  .isEmoji {
+    font-family: unset;
+  }
+}
+
+// @supports (-moz-appearance: none) {
+//   .isEmoji {
+//     font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'EmojiOne', sans-serif;
+//     &.fallback {
+//       font-family: sans-serif !important;
+//     }
+//   }
+// }
 
 h1,
 .heading-1,

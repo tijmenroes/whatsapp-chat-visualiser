@@ -1,13 +1,26 @@
+10/29/22, 18:00 - Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them. Tap to learn more.
 10/29/22, 18:00 - John: Good morning, Alice!
 10/29/22, 18:05 - Alice: Good morning, John! How's the weather there?
 10/29/22, 18:10 - John: It's sunny and warm, perfect for a walk in the park. How about you?
 10/29/22, 18:15 - Alice: It's raining here. I guess I'll stay in and read a book.
 10/29/22, 18:20 - John: That sounds like a great plan too. Enjoy your book!
-10/29/22, 18:25 - Alice: Thank you, John. Enjoy your walk!
-10/29/22, 18:30 - John: By the way, have you read any good books lately?
-10/29/22, 18:35 - Alice: Yes, I'm currently reading "The Great Gatsby". It's quite interesting.
-10/29/22, 18:40 - John: Oh, that's a classic. I read it a few years ago.
-10/29/22, 18:45 - Alice: Yes, it's been on my reading list for a while.
+10/29/22, 19:05 - Peter: Hi everyone, I'm excited to join the group!
+10/29/22, 19:10 - Alice: Welcome, Peter! Do you enjoy reading books too?
+10/29/22, 19:15 - Peter: Thank you, Alice! Yes, I love books. I recently read "1984" and it's now one of my favorites.
+10/29/22, 19:20 - John: Nice to meet you, Peter! "1984" is a thought-provoking book. What did you think about it?
+10/29/22, 19:25 - Peter: I loved it. The themes were so relevant, and it made me think a lot about society and freedom.
+10/29/22, 19:30 - Alice: That's great, Peter. We're always discussing books here. Feel free to share your thoughts!
+10/29/22, 19:35 - Peter: Definitely, thank you! Speaking of which, I've created a quick poll: "What is the best book?"
+10/29/22, 19:40 - Peter: POLL:
+What is your favorite book?
+OPTION: 1984 (1 vote)
+OPTION: The Great Gatsby (1 vote)
+OPTION: To Kill a Mockingbird
+OPTION: Other
+
+10/29/22, 19:45 - Alice: Great idea, Peter! I'll vote for "The Great Gatsby".
+10/29/22, 19:50 - John: I'll go with "To Kill a Mockingbird". Classic and impactful!
+10/29/22, 19:55 - Peter: Awesome responses! Keep them coming, everyone.
 10/29/22, 23:15 - John: I'm back. How's the book going?
 10/29/22, 23:20 - Alice: It's great. I'm almost done.
 10/29/22, 23:25 - John: That's quick. You must really like it.
@@ -102,3 +115,5 @@
 11/16/22, 17:05 - John: Here's the cover. <Media omitted>
 11/16/22, 17:10 - Alice: Looks interesting! I'll check it out. <Media omitted>
 11/16/22, 17:15 - John: I hope you like it. <Media omitted>
+11/16/22, 17:16 - John: Shit this needs to be in the word filtering
+11/17/22, 17:16 - John: Damn this needs to be in the word filtering

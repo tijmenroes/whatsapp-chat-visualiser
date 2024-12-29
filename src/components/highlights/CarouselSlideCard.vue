@@ -158,6 +158,7 @@ h1 {
   -webkit-line-clamp: 12;
   line-clamp: 12;
   -webkit-box-orient: vertical;
+  padding-bottom: 4px;
 
   strong {
     color: $primary;

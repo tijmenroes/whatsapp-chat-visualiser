@@ -169,7 +169,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
   1: [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
-      value: 'The biggest keyboard hero(ine) award goes to...',
+      value: 'The biggest keyboard warrior award goes to...',
     },
     {
       type: CAROUSEL_CONTENT_OPTIONS.value,

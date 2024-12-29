@@ -1,13 +1,24 @@
 <template>
   <div class="row dashboardView">
     <DashboardCard title="Messages per day">
-      <TimeSlide :data="allMessages" />
+      <TimeSlide
+        :data="allMessages"
+        :per-author="false"
+      />
     </DashboardCard>
 
     <DashboardCard
       title="Filter how many times words are used"
       subtitle="Fill in words to see how often they are used"
     >
+      <q-btn
+        color="secondary"
+        class="q-mb-md"
+        to="/dashboard/words"
+      >
+        Show in-depth analysis
+      </q-btn>
+
       <q-select
         filled
         v-model="filterWords"
@@ -18,6 +29,7 @@
         new-value-mode="add"
         label="Filtered words"
       />
+
       <div class="row">
         <MessageWithWord
           class="col-12"
@@ -66,7 +78,10 @@
       />
     </DashboardCard>
 
-    <DashboardCard title="Events">
+    <DashboardCard
+      title="Events"
+      v-if="events.length > 1"
+    >
       <EventsTable :data="events" />
     </DashboardCard>
 

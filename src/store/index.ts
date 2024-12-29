@@ -85,10 +85,11 @@ export const useStore = defineStore('global', () => {
 
   async function getData() {
     const file = await startAnalysisFromFile()
-    setStoreData(file)
+    await setStoreData(file, true)
+    return
   }
 
-  async function analyseChatString(chat: string) {
+  async function analyseChatString(chat: string, isDemo = false) {
     const state = { authors: [], events: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
 
     // Batching might cut-off some messages. This is a trade-off for performance.
@@ -110,31 +111,33 @@ export const useStore = defineStore('global', () => {
 
       await new Promise((resolve) => setTimeout(resolve, 1))
     }
-    event('file_analysed', {
-      total_lines: determineRange(lines.length),
-      lang,
-    })
-
-    Sentry.captureMessage('File analysed', {
-      level: 'info', // Severity level (info, warning, error, etc.)
-      tags: { event: 'file_analysed' }, // Add tags for filtering in Sentry
-      extra: {
-        total_lines: lines.length,
-        total_authors: state.authors.length,
-        total_events: state.events.length,
+    if (!isDemo) {
+      event('file_analysed', {
+        total_lines: determineRange(lines.length),
         lang,
-        time_elapsed: new Date().getTime() - timeStart,
-      },
-    })
+      })
+
+      Sentry.captureMessage('File analysed', {
+        level: 'info', // Severity level (info, warning, error, etc.)
+        tags: { event: 'file_analysed' }, // Add tags for filtering in Sentry
+        extra: {
+          total_lines: lines.length,
+          total_authors: state.authors.length,
+          total_events: state.events.length,
+          lang,
+          time_elapsed: new Date().getTime() - timeStart,
+        },
+      })
+    }
 
     loadingInfo.value.isActive = false
 
     return state
   }
 
-  async function setStoreData(fileString: string) {
+  async function setStoreData(fileString: string, isDemo = false) {
     authorsSettings.value = []
-    const { authors, events, startDate, endDate, polls } = await analyseChatString(fileString)
+    const { authors, events, startDate, endDate, polls } = await analyseChatString(fileString, isDemo)
     authors.forEach((author) => {
       authorsSettings.value.push({
         index: author.authorIndex,
@@ -211,6 +214,15 @@ function detectLanguage(firstLine: string) {
   if (!detectedLanguage) {
     console.log('Language not detected:', firstLine)
     event('language_not_detected', { firstLine, navigatorLanguage: navigator.languages })
+
+    Sentry.captureMessage('Lnaguage not detected', {
+      level: 'info', // Severity level (info, warning, error, etc.)
+      tags: { event: 'lang_not_detected' }, // Add tags for filtering in Sentry
+      extra: {
+        nav_language: navigator.languages,
+        firstLine,
+      },
+    })
   } else {
     console.log('Detected language:', detectedLanguage)
   }

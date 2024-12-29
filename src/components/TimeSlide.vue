@@ -16,25 +16,44 @@ const props = defineProps({
     type: Object as PropType<Author[]>,
     required: true,
   },
+
+  perAuthor: {
+    type: Boolean,
+    default: true,
+  },
 })
 const series = computed(() => {
-  return props.data.map((participant) => {
-    const messages: Message[] = participant.messages
+  if (props.perAuthor) {
+    return props.data.map((participant) => {
+      const messages: Message[] = participant.messages
 
-    const dates = groupBy(messages, 'date')
+      const dates = groupBy(messages, 'date')
 
-    const mappedDates = Object.entries(dates).map((item: [string, Message[]]) => {
-      const start = new Date(item[0]).setUTCHours(0, 0, 0, 0)
-      // if (new Date(start).getTime() == 'NaN' || !new Date(start).getTime()) {
-      //   console.log('NaN', item)
-      // }
-      return [new Date(start).getTime(), item[1].length]
+      const mappedDates = Object.entries(dates).map((item: [string, Message[]]) => {
+        const start = new Date(item[0]).setUTCHours(0, 0, 0, 0)
+        // if (new Date(start).getTime() == 'NaN' || !new Date(start).getTime()) {
+        //   console.log('NaN', item)
+        // }
+        return [new Date(start).getTime(), item[1].length]
+      })
+      return {
+        name: participant.name,
+        data: mappedDates,
+      }
     })
-    return {
-      name: participant.name,
-      data: mappedDates,
-    }
+  }
+  const messages: Message[] = props.data.flatMap((author) => author.messages).sort((a, b) => a.id - b.id)
+  const dates = groupBy(messages, 'date')
+  const mappedDates = Object.entries(dates).map((item: [string, Message[]]) => {
+    const start = new Date(item[0]).setUTCHours(0, 0, 0, 0)
+    return [new Date(start).getTime(), item[1].length]
   })
+  return [
+    {
+      name: 'Total messages',
+      data: mappedDates,
+    },
+  ]
 })
 
 const optionsMessagesOverTime = reactive({

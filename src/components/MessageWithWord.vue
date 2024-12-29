@@ -7,6 +7,13 @@
     >
   q-tooltip>Gekeken naar de woorden: {{ filterWords.join(', ') }}</q-tooltip>s
     </q-icon> -->
+    <p
+      v-if="!filterWords.length"
+      class="q-mt-md"
+    >
+      No words selected
+    </p>
+
     <highcharts :options="options" />
   </div>
 </template>

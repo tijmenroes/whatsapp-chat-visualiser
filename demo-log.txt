@@ -115,3 +115,5 @@ OPTION: Other
 11/16/22, 17:05 - John: Here's the cover. <Media omitted>
 11/16/22, 17:10 - Alice: Looks interesting! I'll check it out. <Media omitted>
 11/16/22, 17:15 - John: I hope you like it. <Media omitted>
+11/16/22, 17:16 - John: Shit this needs to be in the word filtering
+11/17/22, 17:16 - John: Damn this needs to be in the word filtering

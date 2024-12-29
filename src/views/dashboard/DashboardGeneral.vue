@@ -112,7 +112,7 @@ import useTextLengthSeries from '@/composables/useTextLengthSeries.ts'
 import useAttachmentSeries from '@/composables/useAttachmentSeries.ts'
 
 const store = useStore()
-const filterWords = ref(['shit', 'damn'])
+const filterWords = ref(['shit'])
 const data = computed(() => store.authorsDataMessages)
 const allMessages = computed(() => store.messagesPerAuthor)
 const messagesContainingEmoji = computed(() => store.messagesContainingEmoji)

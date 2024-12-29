@@ -50,7 +50,16 @@ function getTime(time: string, amPm: string) {
 
 function isAttachment(message: string) {
   //TODO: Optimize this with langauge specific messages, and also android vs iOS.
-  const attachmentMessages = ['<Media omitted>', '<Video note omitted>', '‎image omitted', '‎sticker omitted', '‎afbeelding weggelaten', '‎sticker weggelaten', '‎video weggelaten']
+  const attachmentMessages = [
+    '<Media omitted>',
+    '<Video note omitted>',
+    '<Media weggelaten>',
+    '‎image omitted',
+    '‎sticker omitted',
+    '‎afbeelding weggelaten',
+    '‎sticker weggelaten',
+    '‎video weggelaten',
+  ]
   const attachmentMessagesEstimated = [
     '<Medios omitidos>',
     '<Nota de video omitida>',
@@ -67,14 +76,14 @@ function isAttachment(message: string) {
   return [...attachmentMessages, ...attachmentMessagesEstimated].includes(message)
 }
 
-function compareFn(a: string | undefined, b: string | undefined) {
-  if (!a || !b) return 0
-  if (new Date(a) < new Date(b)) {
-    return -1
-  } else if (new Date(b) > new Date(a)) {
-    return 1
-  }
-}
+// function compareFn(a: string | undefined, b: string | undefined) {
+//   if (!a || !b) return 0
+//   if (new Date(a) < new Date(b)) {
+//     return -1
+//   } else if (new Date(b) > new Date(a)) {
+//     return 1
+//   }
+// }
 
 function getTranslation(lang: string, translationList: { lang: string; translation: string }[]) {
   const translation = translationList.find((item) => item.lang === lang)
@@ -88,7 +97,8 @@ const messageRegex = /([^]+)/
 const regexParser = new RegExp(sharedRegex.source + authorAndMessageRegex.source, 'i')
 const regexParserSystem = new RegExp(sharedRegex.source + messageRegex.source, 'i') // works for android, not iOS.
 
-const isStart = '^([0-9]+)(/)([0-9]+)(/)([0-9]+), ([0-9]+):([0-9]+)[]? -'
+// check for time and if it resembles the start. Not perfect but only for polls and there are multiple chekcs.
+const isStart = '([0-9]{2}):([0-9]{2}) - '
 const emojiRegex = /\p{Extended_Pictographic}/gu
 
 export async function analyseBatch(
@@ -98,8 +108,9 @@ export async function analyseBatch(
   language: string
 ) {
   const { authors, events, polls } = state
-  const voteRegex = RegExp(/\((?<name>[0-9]) vote/)
-  const pollOptionRegex = RegExp(`${getTranslation(language, POLL_OPTION_TRANSLATION)}:(?<name>.*) \\([0-9] ${getTranslation(language, VOTE_TRANSLATION)}`)
+  const voteRegex = RegExp(`\\((?<name>[0-9]) ${getTranslation(language, VOTE_TRANSLATION)}`)
+  const pollOptionRegex = RegExp(`${getTranslation(language, POLL_OPTION_TRANSLATION)}:(?<name>.*)`)
+
   let authorIndex: number = 0
   let id: number = 0
   const pollIds: string[] = []
@@ -118,7 +129,7 @@ export async function analyseBatch(
 
   // Note: This means we need to loop over the lines twice, not sure if performance is an issue here.
   function stripPolls(message: string, idx: number) {
-    if (message.endsWith(`: ${getTranslation(language, POLL_TRANSLATION)}:`) && message.match(isStart)) {
+    if (message.endsWith(`${getTranslation(language, POLL_TRANSLATION)}:`) && !lines[idx + 1].match(isStart)) {
       const pollOptions = []
 
       const [msg, date, time, amPm, authorName, messageText] = regexParser.exec(message) || []
@@ -127,7 +138,7 @@ export async function analyseBatch(
       // Safer then putting a while loop here and checking for certain conditions.
       for (let i = idx; i < idx + 20; i++) {
         pollIds.push(i.toString())
-        if (i > idx + 1 && lines[i].startsWith(`${getTranslation(language, POLL_OPTION_TRANSLATION)}: `)) {
+        if (i > idx + 1 && lines[i].includes(`${getTranslation(language, POLL_OPTION_TRANSLATION)}: `)) {
           pollOptions.push({
             option: pollOptionRegex.exec(lines[i])?.groups?.name || '',
             votes: voteRegex.exec(lines[i])?.groups?.name ?? 0,
@@ -226,7 +237,6 @@ export async function analyseBatch(
   // see where this fits in
 
   if (isFinalBatch) {
-    console.log('final batch')
     const { authors: authorData } = formatDates(authors)
     const { startDate, endDate } = getStartEndDates(authorData)
     state.authors = authorData
@@ -239,7 +249,7 @@ export async function analyseBatch(
 }
 
 export async function startAnalysisFromFile(): Promise<string> {
-  const chatLocation = import.meta.env.DEV ? '../../chat-small.txt' : '../../demo-log.txt'
+  const chatLocation = import.meta.env.DEV ? '../../chat-lisa.txt' : '../../demo-log.txt'
 
   // const state = { authors: [], events: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
 
@@ -259,6 +269,7 @@ function formatDates(authors: Author[]) {
       return item.messages.every((message) => dayjs(message.date).isValid())
     })
   ) {
+    console.log('Invalid date found')
     authors.forEach((item) => {
       item.messages = item.messages.map((message) => ({
         ...message,
@@ -274,13 +285,69 @@ function formatDates(authors: Author[]) {
 
   return { authors }
 }
+// TODO: Add check for links? Maybe just in a later level with attachments?
 
 function getStartEndDates(authors: Author[]) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const allDates = authors.flatMap((author) => author.messages.map((message) => message.date)).sort(compareFn)
+  const allDates = [...new Set(authors.flatMap((author) => author.messages.map((message) => message.date)))].sort((a, b) => {
+    return new Date(a) - new Date(b)
+  })
+
   const startDate = allDates[0]
   const endDate = allDates[allDates.length - 1]
 
   return { startDate, endDate }
 }
+
+/*
+function formatDates(authors: Author[]) {
+  // Regex for different date formats
+  const dateRegex = {
+    dd_mm_yy: /^([0-3]?[0-9])\/([0-1]?[0-9])\/([0-9]{2})$/, // DD/MM/YY or DD/MM/YYYY
+    mm_dd_yy: /^([0-1]?[0-9])\/([0-3]?[0-9])\/([0-9]{2})$/, // MM/DD/YY or MM/DD/YYYY
+    dd_mm_yyyy: /^([0-3]?[0-9])\/([0-1]?[0-9])\/([0-9]{4})$/, // DD/MM/YYYY
+    mm_dd_yyyy: /^([0-1]?[0-9])\/([0-3]?[0-9])\/([0-9]{4})$/, // MM/DD/YYYY
+    dd_mm_yyyy_dash: /^([0-3]?[0-9])-(?:[0-1]?[0-9])-(?:[0-9]{4})$/, // DD-MM-YYYY
+    mm_dd_yyyy_dash: /^([0-1]?[0-9])-(?:[0-3]?[0-9])-(?:[0-9]{4})$/ // MM-DD-YYYY
+  };
+
+  if (
+    !authors.every((item) => {
+      return item.messages.every((message) => dayjs(message.date).isValid());
+    })
+  ) {
+    authors.forEach((item) => {
+      item.messages = item.messages.map((message) => {
+        let formattedDate = message.date;
+
+        // Check if the date matches any of the regex patterns
+        if (dateRegex.dd_mm_yy.test(message.date)) {
+          formattedDate = dayjs(message.date, 'DD/MM/YY').format('MM/DD/YYYY');
+        } else if (dateRegex.mm_dd_yy.test(message.date)) {
+          formattedDate = dayjs(message.date, 'MM/DD/YY').format('MM/DD/YYYY');
+        } else if (dateRegex.dd_mm_yyyy.test(message.date)) {
+          formattedDate = dayjs(message.date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+        } else if (dateRegex.mm_dd_yyyy.test(message.date)) {
+          formattedDate = dayjs(message.date, 'MM/DD/YYYY').format('MM/DD/YYYY');
+        } else if (dateRegex.dd_mm_yyyy_dash.test(message.date)) {
+          formattedDate = dayjs(message.date, 'DD-MM-YYYY').format('MM/DD/YYYY');
+        } else if (dateRegex.mm_dd_yyyy_dash.test(message.date)) {
+          formattedDate = dayjs(message.date, 'MM-DD-YYYY').format('MM/DD/YYYY');
+        }
+
+        return {
+          ...message,
+          date: formattedDate,
+        };
+      });
+    });
+  }
+
+  if (authors.length === 0) {
+    console.log('No authors found');
+  }
+
+  return { authors };
+}
+*/

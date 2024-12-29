@@ -1,6 +1,28 @@
 <template>
   <footer class="column">
     <LogoComponent />
+
+    <div>
+      <p class="text-center q-mt-xl">
+        Made by
+        <a
+          href="https://tijmenroes.github.io/portfolio/"
+          target="_blank"
+        >
+          Tijmen Roes
+        </a>
+
+        <br />
+
+        Designed by
+        <a
+          href="https://mediabeer.nl/"
+          target="_blank"
+        >
+          Bekir Uysal
+        </a>
+      </p>
+    </div>
   </footer>
 </template>
 

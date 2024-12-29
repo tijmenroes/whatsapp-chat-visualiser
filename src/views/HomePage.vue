@@ -11,7 +11,11 @@
             Whatsapp chat
             <span class="text-primary">instantly.</span>
           </h1>
-          <div class="q-pt-lg col-6 col-xs-10">Get insights into your chats - Now with more interesting graphs, free statistics and full PDF export</div>
+          <div class="q-pt-lg col-6 col-xs-10">
+            Get free insights into your own chats, without sending the chat to a server.
+            <br />
+            See who the biggest yapper is, the biggest emoji abuser, who cusses the most and much more...
+          </div>
         </div>
 
         <div>
@@ -26,34 +30,32 @@
     </div>
 
     <div class="contentContainer column">
-      <section class="text-center row justify-center">
-        <h3 class="heading-3 pageTitle text-bold q-pt-xl">
+      <section class="row">
+        <h3 class="heading-3 text-center full-width pageTitle text-bold q-pt-xl">
           The
-          <span>most eloborate</span>
+          <span>most elaborate</span>
           chat analyzer yet.
         </h3>
-        <p class="col-4 col-xs-12 q-mt-lg">Visualise your whatsapp chat and gain insights in who the biggest yapper is, the biggest emoji abuser, who cusses the most and much more...</p>
+
+        <p class="text-center q-mt-lg full-width">Get a wrapped-like summary of your chat by viewing the highlights, or use the dashboard to get a more detailed view of your chat.</p>
+        <div class="offset-md-2">
+          <ul>
+            <li>Messages sent per day, hour and day of the week</li>
+            <li>Word frequency analysis</li>
+            <li>Which emoji's sent per person</li>
+            <li>Message length</li>
+            <li>Message streak, consecutive days of messages</li>
+            <li>Attachments sent</li>
+            <li>Attachments type sent image, video, audio and stickers (IOS Only)</li>
+            <li>Heatmap of messages sent per time</li>
+            <li>Events - New members, Group name changes, Group description changes, Group picture</li>
+            <li>Polls (Group chat only)</li>
+            <li>Configure data - Change names, hide people and change time period</li>
+          </ul>
+        </div>
       </section>
 
       <hr />
-
-      <!-- <section>
-        <div class="benefits row">
-          <div
-            v-for="benefit in benefits"
-            :key="benefit.title"
-            class="benefit col-md-4 col-xs-12 q-gutter-md q-py-md"
-          >
-            <q-icon
-              :name="benefit.icon"
-              color="primary"
-              size="42px"
-            />
-            <h4>{{ benefit.title }}</h4>
-            <p>{{ benefit.description }}</p>
-          </div>
-        </div>
-      </section> -->
 
       <section ref="tutorial">
         <h3 class="heading-3 text-bold text-center">
@@ -141,24 +143,6 @@ function openMailWindow() {
   window.open('mailto:omgprivate@outlook.com?subject=Whatswrapped feedback')
 }
 
-// const benefits = [
-//   {
-//     icon: 'mdi-account-group',
-//     title: "Who's the biggest yapper?",
-//     description: 'Visualise your whatsapp chat and gain insights in who the biggest yapper is, the biggest emoji abuser, who cusses the most and much more... ',
-//   },
-//   {
-//     icon: 'mdi-account-group',
-//     title: 'Community',
-//     description: 'Join a community of like-minded individuals who are passionate about the same things you are.',
-//   },
-//   {
-//     icon: 'mdi-account-group',
-//     title: 'Community',
-//     description: 'Join a community of like-minded individuals who are passionate about the same things you are.',
-//   },
-// ]
-
 const faqItems = [
   {
     question: 'How do I export my chat?',
@@ -166,22 +150,17 @@ const faqItems = [
   },
   {
     question: 'Can I export group chats?',
-    answer: 'You can export group chats, keep in mind that with a lot of participants the data might be overwhelming. Group chats with over 10 participants are not recommended.',
+    answer: 'You can export group chats, keep in mind that with a lot of participants the data might be overwhelming. Group chats with over 20 participants are not recommended.',
   },
   {
     question: 'What happens with my chat data?',
     answer:
-      'Your chat data is processed locally in your browser. This means that your chat data never leaves your device. Your chat will never be stored on our servers. The only thing that is logged are lines that are not able to be visualised. This is done to improve the service.',
+      'Your chat data is processed locally in your browser. This means that your chat data never leaves your device. Your chat will never be stored on our servers. Whenever a bug occurs, the first line of the chat will be logged, this is usually a built-in whatsapp message like "Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them. Tap to learn more.". This is done to improve the service.',
   },
   {
     question: 'Is my chat shared with anyone else?',
-    answer:
-      'No, your chat is not shared with anyone else. Everything is processed locally in your browser. This means that your chat data never leaves your device. The only thing that is logged are lines that are not able to be visualised. This is done to improve the service.',
+    answer: 'No, your chat is not shared with anyone else. We have no use for your chat and will not store it anywhere.',
   },
-  // {
-  //   question: 'How do I export my chat?',
-  //   answer: 'You can export your chat by following the steps in the tutorial.',
-  // },
 ]
 
 function scrollToTutorial() {
@@ -189,7 +168,6 @@ function scrollToTutorial() {
 }
 
 async function onUseDemoData() {
-  // await store.setStoreData(reader.result as string)
   await store.getData()
   router.push({ name: routeNames.dashboard_general })
 }

@@ -68,7 +68,10 @@
 
       <hr />
 
-      <section class="text-center">
+      <section
+        class="text-center"
+        id="upload"
+      >
         <h3 class="heading-3 text-bold q-pb-lg">Upload your chat log</h3>
 
         <SelectFileComponent />
@@ -132,6 +135,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
 import SelectFileComponent from '@/components/SelectFileComponent.vue'
 import LoadingInfo from '@/components/homepage/LoadingInfo.vue'
+import { event } from 'vue-gtag'
 // import ContactForm from '@/components/homepage/ContactForm.vue'
 
 const router = useRouter()
@@ -169,6 +173,7 @@ function scrollToTutorial() {
 
 async function onUseDemoData() {
   await store.getData()
+  event('demo_data_used')
   router.push({ name: routeNames.dashboard_general })
 }
 </script>

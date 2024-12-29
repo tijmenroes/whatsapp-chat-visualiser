@@ -7,8 +7,7 @@
         </router-link>
       </div>
       <q-list>
-        <q-intersection
-          transition="flip-left"
+        <div
           v-for="(item, idx) in navItems"
           :key="idx"
         >
@@ -28,7 +27,7 @@
               {{ item.title }}
             </q-item-section>
           </q-item>
-        </q-intersection>
+        </div>
       </q-list>
 
       <q-btn
@@ -75,7 +74,6 @@ const navItems = [
   },
 ]
 
-console.log(store.pollsData)
 if (store.pollsData.length) {
   navItems.push({
     icon: 'group',

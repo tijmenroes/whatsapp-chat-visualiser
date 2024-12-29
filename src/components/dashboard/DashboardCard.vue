@@ -1,7 +1,5 @@
 <template>
-  <q-intersection
-    transition="slide-up"
-    once
+  <div
     :class="isSmall ? 'col-md-6' : 'col-md-12'"
     class="col-xs-12 DashboardCard"
   >
@@ -23,7 +21,7 @@
         </q-card-section>
       </q-card>
     </div>
-  </q-intersection>
+  </div>
 </template>
 
 <script setup lang="ts">

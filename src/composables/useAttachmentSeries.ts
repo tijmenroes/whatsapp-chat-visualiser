@@ -14,7 +14,5 @@ export default function (authors: Author[], showRelative = false) {
     }
   })
 
-  console.log(authors)
-
   return { series, categories }
 }

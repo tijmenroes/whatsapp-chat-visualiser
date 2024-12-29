@@ -249,7 +249,7 @@ export async function analyseBatch(
 }
 
 export async function startAnalysisFromFile(): Promise<string> {
-  const chatLocation = import.meta.env.DEV ? '../../chat-lisa.txt' : '../../demo-log.txt'
+  const chatLocation = import.meta.env.DEV ? '../../demo-log.txt' : '../../demo-log1.txt'
 
   // const state = { authors: [], events: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
 

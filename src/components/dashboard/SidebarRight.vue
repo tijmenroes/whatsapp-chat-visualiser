@@ -79,9 +79,7 @@
       </q-btn>
 
       <div class="row">
-        <q-intersection
-          transition="slide-up"
-          once
+        <div
           class="col-xs-12 col-sm-6 col-md-12"
           v-for="(summaryItem, summaryIdx) in summaryItems"
           :key="summaryIdx"
@@ -114,7 +112,7 @@
               </div>
             </q-card-section>
           </q-card>
-        </q-intersection>
+        </div>
       </div>
     </div>
 

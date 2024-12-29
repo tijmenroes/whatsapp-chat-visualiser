@@ -141,16 +141,15 @@ export const useSummaryStore = defineStore('summary', () => {
 
   function generalItemsHandler() {
     const allDates = computed(() => [...new Set(globalStore.messagesPerAuthor.flatMap((author) => author.messages.map((message) => new Date(message.date).getTime())).sort((a, b) => a - b))])
-    const highestStreak = getHighestStreak(allDates.value)
+    const highestStreak = computed(() => getHighestStreak(allDates.value))
     const highestStreakItem = computed<SummaryItem>(() => ({
       title: 'Highest streak',
-      value: `${highestStreak.maxStreak} days`,
+      value: `${highestStreak.value.maxStreak} days`,
       icon: 'emoji_events',
-      subtitle: `From ${new Date(highestStreak.start).toLocaleDateString()} to ${new Date(highestStreak.end).toLocaleDateString()}`,
+      subtitle: `From ${new Date(highestStreak.value.start).toLocaleDateString()} to ${new Date(highestStreak.value.end).toLocaleDateString()}`,
       class: '',
-      showValue: !!highestStreak.maxStreak,
+      showValue: !!highestStreak.value.maxStreak,
     }))
-    console.log(highestStreakItem.value)
 
     return { highestStreakItem }
   }

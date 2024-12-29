@@ -29,9 +29,14 @@ const options = reactive({
     type: 'heatmap',
     plotBorderWidth: 1,
   },
+
+  tooltip: {
+    format: `<b>{point.value}</b> messages on <br> <b>{series.yAxis.categories.(point.y)}</b> - <b>{series.xAxis.categories.(point.x)}h</b> `,
+  },
   series: [
     {
       borderWidtht: 1,
+      name: 'juooee',
       data: computed(() => props.series),
       dataLabels: {
         enabled: true,
@@ -44,14 +49,14 @@ const options = reactive({
     categories: props.categories,
 
     title: {
-      text: '',
+      text: 'Hours',
     },
   },
   yAxis: {
     type: '',
-    categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    categories: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     title: {
-      text: '',
+      text: 'Days',
     },
   },
 
@@ -59,10 +64,6 @@ const options = reactive({
     min: 0,
     minColor: '#FFFFFF',
     maxColor: '#3de76c',
-  },
-
-  tooltip: {
-    shared: true,
   },
 })
 </script>

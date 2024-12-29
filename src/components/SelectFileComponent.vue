@@ -75,11 +75,27 @@
       v-else
       class="row justify-center"
     >
-      <input
+      <!-- <input
         type="file"
         accept=".zip, .txt"
         @change="handleMobileUpload"
-      />
+      /> -->
+
+      <div class="file-upload-container">
+        <input
+          type="file"
+          id="file-upload"
+          class="file-upload-input"
+          accept=".zip, .txt"
+          @change="handleMobileUpload"
+        />
+        <label
+          for="file-upload"
+          class="file-upload-label"
+        >
+          Choose a file
+        </label>
+      </div>
 
       <q-spinner
         v-if="isLoading"
@@ -262,6 +278,8 @@ function handleMobileUpload($event: Event) {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/variables.sass';
+
 :deep(.fileUpload) {
   .q-field__control {
     height: 400px;
@@ -300,18 +318,50 @@ function handleMobileUpload($event: Event) {
   margin: 0 4px;
 }
 
-input::file-selector-button {
-  border-radius: 8px;
-  background: $primary;
-  padding: 0.5em;
-  border: none;
-  border: thin solid grey;
-  outline: none;
+.file-upload-container {
+  /* Hide the default file input */
+  .file-upload-input {
+    display: none; /* Hide the original input button */
+  }
+
+  /* Style the custom label that triggers the file input */
+  .file-upload-label {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: $primary;
+    color: black;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Add a focus effect */
+  .file-upload-label:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.5);
+  }
+
+  /* Style the file name text after file is selected */
+  .file-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+
+  .file-upload-name {
+    margin-top: 10px;
+    font-size: 14px;
+    color: black;
+  }
 }
 
 @media (max-width: 768px) {
   .SelectFileComponent {
     width: 100%;
+    border: none !important;
     .fileUpload {
       width: 100%;
     }

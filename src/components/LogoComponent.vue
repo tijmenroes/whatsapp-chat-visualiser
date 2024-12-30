@@ -2,7 +2,7 @@
   <div class="LogoComponent row q-gutter-md">
     <img
       src="@/assets/branding/WW-Landscape-Green-Lightmode.svg"
-      alt="logo"
+      alt="Whats-wrapped logo"
     />
   </div>
 </template>

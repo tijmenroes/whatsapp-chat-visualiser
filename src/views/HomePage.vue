@@ -31,11 +31,11 @@
 
     <div class="contentContainer column">
       <section class="row">
-        <h3 class="heading-3 text-center full-width pageTitle text-bold q-pt-xl">
+        <h2 class="heading-3 text-center full-width pageTitle text-bold q-pt-xl">
           The
           <span>most elaborate</span>
           chat analyzer yet.
-        </h3>
+        </h2>
 
         <p class="text-center q-mt-lg full-width">Get a wrapped-like summary of your chat by viewing the highlights, or use the dashboard to get a more detailed view of your chat.</p>
         <div class="offset-md-2">
@@ -198,7 +198,7 @@ section {
 
 .hero {
   height: 100vh;
-  background: url('@/assets/hero-bg.jpg') no-repeat center center;
+  background: url('@/assets/hero-bg.webp') no-repeat center center;
   background-size: cover;
 
   &:after {

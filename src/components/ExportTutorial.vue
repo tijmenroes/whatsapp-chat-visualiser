@@ -7,7 +7,10 @@
           @click="iosSelected = true"
         >
           <q-card-section class="content">
-            <img src="@/assets/apple-logo.svg" />
+            <img
+              src="@/assets/apple-logo.svg"
+              loading="lazy"
+            />
             <span>For iOS</span>
           </q-card-section>
         </q-card>
@@ -17,7 +20,10 @@
           @click="iosSelected = false"
         >
           <q-card-section class="content">
-            <img src="@/assets/android-logo.svg" />
+            <img
+              src="@/assets/android-logo.svg"
+              loading="lazy"
+            />
             <span>For Android</span>
           </q-card-section>
         </q-card>
@@ -51,7 +57,8 @@
           <img
             v-if="activeStep < 4"
             :src="getImgUrl(activeImage)"
-            alt="Step image"
+            :alt="`Step ${activeStep} for ${iosSelected ? 'iOS' : 'Android'}`"
+            loading="lazy"
           />
 
           <SelectFileComponent v-else />

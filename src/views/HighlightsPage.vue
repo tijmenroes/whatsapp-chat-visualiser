@@ -24,91 +24,19 @@
         />
       </template>
 
-      <!-- TODO: Refactor with a v-for -->
       <q-carousel-slide
-        :name="1"
+        v-for="(item, index) in cardsContent"
+        :key="index"
+        :name="index"
         class="slide"
       >
         <CarouselSlideCard
-          v-if="slide == 1"
+        v-if="slide == index"
+         :top-values="item"
           @slide-next="slide++"
-          :top-values="cardsContent[0]"
-        />
-      </q-carousel-slide>
-      <q-carousel-slide
-        :name="2"
-        class="slide"
-      >
-        <CarouselSlideCard
-          v-if="slide == 2"
-          @slide-next="slide++"
-          :top-values="cardsContent[5]"
-        ></CarouselSlideCard>
-      </q-carousel-slide>
-      <q-carousel-slide
-        :name="3"
-        class="slide"
-      >
-        <CarouselSlideCard
-          v-if="slide == 3"
-          @slide-next="slide++"
-          :top-values="cardsContent[1]"
-        ></CarouselSlideCard>
-      </q-carousel-slide>
-      <q-carousel-slide
-        :name="4"
-        class="slide"
-      >
-        <CarouselSlideCard
-          v-if="slide == 4"
-          @slide-next="slide++"
-          :top-values="cardsContent[2]"
-          is-emoji
-        ></CarouselSlideCard>
-      </q-carousel-slide>
-
-      <q-carousel-slide
-        :name="5"
-        class="slide"
-      >
-        <CarouselSlideCard
-          v-if="slide == 5"
-          @slide-next="slide++"
-          :top-values="cardsContent[3]"
-        ></CarouselSlideCard>
-      </q-carousel-slide>
-
-      <q-carousel-slide
-        :name="6"
-        class="slide"
-      >
-        <CarouselSlideCard
-          v-if="slide == 6"
-          @slide-next="slide++"
-          :top-values="cardsContent[6]"
-        ></CarouselSlideCard>
-      </q-carousel-slide>
-
-      <q-carousel-slide
-        :name="7"
-        class="slide"
-      >
-        <CarouselSlideCard
-          v-if="slide == 7"
-          @slide-next="slide++"
-          :top-values="cardsContent[7]"
-        ></CarouselSlideCard>
-      </q-carousel-slide>
-
-      <q-carousel-slide
-        :name="8"
-        class="slide"
-      >
-        <CarouselSlideCard
-          @slide-reset="slide = 1"
-          is-last
-          :top-values="cardsContent[8]"
-        ></CarouselSlideCard>
+          :is-emoji="index == 3"
+          :is-last="cardsContent.length - 1 == index"
+          />
       </q-carousel-slide>
     </q-carousel>
   </div>
@@ -127,13 +55,13 @@ const store = useStore()
 
 const slide = ref(1)
 const carousel = ref()
-// TODO: Refactor this entire file.
 
 // Ignore for now
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
-  0: [
+const cardsContent = computed<Record<number, TopValueEntry[]>>(() => (
+[
+  [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'A total of...',
@@ -148,7 +76,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
     },
   ],
 
-  5: [
+  [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'The first message...',
@@ -167,7 +95,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
     },
   ],
 
-  1: [
+  [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'The biggest keyboard warrior award goes to...',
@@ -185,7 +113,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
       values: messagesRanking.value.slice(0),
     },
   ],
-  2: [
+  [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'You just cannot live without sending this',
@@ -203,25 +131,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
       values: emojiCount.value.slice(1),
     },
   ],
-  3: [
-    {
-      type: CAROUSEL_CONTENT_OPTIONS.title,
-      value: 'The fastest typer is...',
-    },
-    {
-      type: CAROUSEL_CONTENT_OPTIONS.value,
-      value: messagesPerAuthorTimed.value[0]?.label,
-    },
-    {
-      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
-      value: `Send an average of ${messagesPerAuthorTimed.value[0]?.value.toFixed(2)} messages per day`,
-    },
-    {
-      type: CAROUSEL_CONTENT_OPTIONS.leaderboard,
-      values: messagesPerAuthorTimed.value?.slice(1, 4).map((author) => ({ label: author.label, value: author.value.toFixed(2) })) || [],
-    },
-  ],
-  4: [
+   [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'This person just cannot stop typing...',
@@ -240,7 +150,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
     },
   ],
 
-  6: [
+  [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'Attachment queen alert! Guess who loves sending media the most?',
@@ -255,7 +165,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
     },
   ],
 
-  7: [
+     [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'Highest streak! (consecutive days with messages)',
@@ -269,7 +179,7 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
       value: `From ${new Date(highestStreak.start).toLocaleDateString()} to ${new Date(highestStreak.end).toLocaleDateString()}`,
     },
   ],
-  8: [
+   [
     {
       type: CAROUSEL_CONTENT_OPTIONS.title,
       value: 'Biggest spammer! (consecutive days with messages)',
@@ -280,10 +190,10 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
     },
     {
       type: CAROUSEL_CONTENT_OPTIONS.subtitle,
-      value: `On ${new Date(highestStreakPerPerson.value.start).toLocaleDateString()}`
+      value: `${highestStreakPerPerson.value.maxStreak} messages in a row on ${new Date(highestStreakPerPerson.value.start).toLocaleDateString()}`
     },
   ]
-}))
+]))
 
 // Why did I use authorsData instead of messagesPerAuthor?
 const messagesData = computed(() => store.filteredMessages)
@@ -354,6 +264,12 @@ const highestStreakPerPerson = computed(() => {
   border: 2px solid $primary;
   border-radius: 50%;
   color: white;
+
+  &:first-child {
+    // hacky way to hide the first button
+    display: none;
+  }
+
 }
 .qarousel-navigation.active {
   width: 100px;

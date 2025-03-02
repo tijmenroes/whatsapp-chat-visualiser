@@ -27,6 +27,8 @@ dist-ssr
 public/chat-small.txt
 chat-*
 
+testChats/
+
 # Sentry Config File
 .env.sentry-build-plugin
 .env

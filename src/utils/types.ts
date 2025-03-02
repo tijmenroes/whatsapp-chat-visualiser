@@ -1,17 +1,26 @@
+export interface ScriptState {
+  startDate?: string
+  endDate?: string
+  messages: Message[]
+  authors: Author[]
+  events: Event[]
+  polls: Poll[]
+  id: number
+}
+
 export interface Message {
   date: string
   message: string
   id: number
   hour: number | null
   isAttachment: boolean
-  upperCharactersCount: number
+  authorId: number
   amountCharacters: number
   emojis: string[]
 }
 
 export interface Author {
   name: string
-  messages: Message[]
   authorIndex: number
 }
 
@@ -36,6 +45,7 @@ export interface AuthorSettings {
   index: number
   name: string
   show: boolean
+  color: string
 }
 
 export interface SummaryItem {

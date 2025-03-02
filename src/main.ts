@@ -11,13 +11,14 @@ import router from './router'
 import './styles/main.scss'
 import * as Sentry from '@sentry/vue'
 import VueGtag from 'vue-gtag'
+import { DEFAULT_COLORS } from './config/highcharts'
 // import { VueReCaptcha } from 'vue-recaptcha-v3'
 const pinia = createPinia()
 
 Highcharts.setOptions({
-  colors: ['#B18CFF', '#7DE7CE', '#5375FD', '#F58980', '#F9F680', '#FFCEA1', '#FFB3D4', '#80D2F5', '#6AF9C4'],
+  colors: DEFAULT_COLORS,
 })
-// hcHeatmap(Highcharts)
+
 const app = createApp(App)
 
 if (import.meta.env.PROD) {

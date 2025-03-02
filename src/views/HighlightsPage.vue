@@ -107,7 +107,7 @@
         <CarouselSlideCard
           @slide-reset="slide = 1"
           is-last
-          :top-values="cardsContent[4]"
+          :top-values="cardsContent[8]"
         ></CarouselSlideCard>
       </q-carousel-slide>
     </q-carousel>
@@ -121,12 +121,13 @@ import CarouselSlideCard from '../components/highlights/CarouselSlideCard.vue'
 import { CAROUSEL_CONTENT_OPTIONS } from '../config/carouselContentOptions'
 import { TopValueEntry } from '@/utils/types'
 import useTextLengthSeries from '@/composables/useTextLengthSeries.ts'
-import { getHighestStreak } from '@/utils/getHighestStreak'
+import { getHighestStreak, getHighestStreakPerson } from '@/utils/getHighestStreak'
 
 const store = useStore()
 
 const slide = ref(1)
 const carousel = ref()
+// TODO: Refactor this entire file.
 
 // Ignore for now
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -268,14 +269,29 @@ const cardsContent = computed<Record<number, TopValueEntry[]>>(() => ({
       value: `From ${new Date(highestStreak.start).toLocaleDateString()} to ${new Date(highestStreak.end).toLocaleDateString()}`,
     },
   ],
+  8: [
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.title,
+      value: 'Biggest spammer! (consecutive days with messages)',
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.value,
+      value: highestStreakPerPerson.value.name,
+    },
+    {
+      type: CAROUSEL_CONTENT_OPTIONS.subtitle,
+      value: `On ${new Date(highestStreakPerPerson.value.start).toLocaleDateString()}`
+    },
+  ]
 }))
 
 // Why did I use authorsData instead of messagesPerAuthor?
+const messagesData = computed(() => store.filteredMessages)
 const authorsDataAllMessages = computed(() => store.authorsData)
 const authorsDataMessages = computed(() => store.authorsDataMessages)
 const messagesContainingEmoji = computed(() => store.messagesContainingEmoji)
 const attachmentMessages = computed(() => store.messagesContainginAttachments)
-const totalMessagesSent = computed(() => authorsDataAllMessages.value.map((author) => author.messages.length).reduce((acc, curr) => acc + curr, 0))
+const totalMessagesSent = computed(() => messagesData.value.length)
 const messagesPerAuthor = computed(() => authorsDataAllMessages.value.map((author) => ({ label: author.name, value: author.messages.length })).sort((a, b) => b.value - a.value))
 const messagesRanking = computed(() => messagesPerAuthor.value.filter((_, idx) => idx > 0 && idx < 4))
 const textLength = computed(() => {
@@ -300,17 +316,24 @@ const filterDate = computed(() => store.filterDate)
 const totalDays = computed(() => (filterDate.value?.from && filterDate.value?.to ? Math.abs(filterDate.value?.to.getTime() - filterDate.value?.from.getTime()) / (1000 * 60 * 60 * 24) : 0))
 
 const messagesPerAuthorTimed = computed(() => messagesPerAuthor.value.map((author) => ({ label: author.label, value: author.value / totalDays.value })))
-const firstMessage = computed(() => {
-  const allMessages = authorsDataMessages.value.flatMap((author) => author.messages)
-  return allMessages.sort((a, b) => a.id - b.id)[0]
-})
+const firstMessage = computed(() => messagesData.value.filter((message) => !message.isAttachment)[0] || null)
 
 const mostAttachmentsSentBy = computed(() => {
   const sortedAttachments = [...attachmentMessages.value].sort((a, b) => b.messages.length - a.messages.length)
   return sortedAttachments.length > 0 ? sortedAttachments[0] : null
 })
-const allDates = [...new Set(store.messagesPerAuthor.flatMap((author) => author.messages.map((message) => new Date(message.date).getTime())).sort((a, b) => a - b))]
+const allDates = [...new Set(store.filteredMessages.flatMap((message) => new Date(message.date).getTime()))]
 const highestStreak = getHighestStreak(allDates)
+
+const highestStreakPerPerson = computed(() => {
+  const streak = getHighestStreakPerson(messagesData.value)
+  const author = store.authorsSettings.find((author) => author.index === streak.highestId)
+  return {
+    ...streak,
+    name: author?.name,
+  }
+})
+
 </script>
 
 <style scoped lang="scss">

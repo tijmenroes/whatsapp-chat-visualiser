@@ -1,7 +1,9 @@
 <template>
   <div class="container">
-    <!-- {{ data }} -->
-    <highcharts :options="optionsMessagesOverTime" />
+    <highcharts
+      :options="optionsMessagesOverTime"
+      :callback="chartLoad"
+    />
   </div>
 </template>
 
@@ -10,6 +12,7 @@ import { Author, Message } from '../utils/types.ts'
 import type { PropType } from 'vue'
 import { reactive, computed } from 'vue'
 import { groupBy } from '../utils/helperFunctions.ts'
+import { useStore } from '@/store/index.ts'
 
 const props = defineProps({
   data: {
@@ -22,6 +25,8 @@ const props = defineProps({
     default: true,
   },
 })
+
+const store = useStore()
 const series = computed(() => {
   if (props.perAuthor) {
     return props.data.map((participant) => {
@@ -31,14 +36,12 @@ const series = computed(() => {
 
       const mappedDates = Object.entries(dates).map((item: [string, Message[]]) => {
         const start = new Date(item[0]).setUTCHours(0, 0, 0, 0)
-        // if (new Date(start).getTime() == 'NaN' || !new Date(start).getTime()) {
-        //   console.log('NaN', item)
-        // }
         return [new Date(start).getTime(), item[1].length]
       })
       return {
         name: participant.name,
         data: mappedDates,
+        color: store.getColorByAuthorId(participant.authorIndex),
       }
     })
   }
@@ -56,6 +59,10 @@ const series = computed(() => {
   ]
 })
 
+function chartLoad() {
+  console.log('Chart loaded')
+}
+
 const optionsMessagesOverTime = reactive({
   title: null,
   chart: {
@@ -72,6 +79,7 @@ const optionsMessagesOverTime = reactive({
       text: 'Date',
     },
   },
+
   yAxis: {
     title: {
       text: '',

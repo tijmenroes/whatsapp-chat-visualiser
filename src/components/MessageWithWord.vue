@@ -22,7 +22,9 @@
 import { Author, Message } from '../utils/types.ts'
 import type { PropType } from 'vue'
 import { reactive, computed } from 'vue'
+import { useStore } from '@/store'
 
+const store = useStore()
 const props = defineProps({
   data: {
     type: Object as PropType<Author[]>,
@@ -44,11 +46,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
-  // showIcon: {
-  //   type: Boolean,
-  //   default: true,
-  // },
 })
 
 const series = computed(() => {
@@ -59,6 +56,7 @@ const series = computed(() => {
     return {
       name: participant.name,
       data,
+      color: store.getColorByAuthorId(participant.authorIndex),
     }
   })
 })

@@ -1,8 +1,10 @@
 import { Author, Message } from '@/utils/types'
 import { groupBy } from '@/utils/helperFunctions.ts'
 import { computed } from 'vue'
+import { useStore } from '@/store'
 
 export function messagePerDaySeries(authors: Author[], groupMethod = 'day') {
+  const store = useStore()
   const isHour = groupMethod === 'hour'
   const isDay = groupMethod === 'day'
   const isDayHour = groupMethod === 'dayHour'
@@ -33,6 +35,7 @@ export function messagePerDaySeries(authors: Author[], groupMethod = 'day') {
         id: participant.authorIndex,
         name: participant.name,
         data: personData,
+        color: store.getColorByAuthorId(participant.authorIndex),
       }
     })
   )

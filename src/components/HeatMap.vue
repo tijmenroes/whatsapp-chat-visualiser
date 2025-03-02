@@ -36,7 +36,6 @@ const options = reactive({
   series: [
     {
       borderWidtht: 1,
-      name: 'juooee',
       data: computed(() => props.series),
       dataLabels: {
         enabled: true,

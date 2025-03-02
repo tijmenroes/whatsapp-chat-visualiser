@@ -1,11 +1,15 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-3">
+    <div class="row colNames">
+      <div class="col-2 flex justify-center items-center">
         <span>Show</span>
       </div>
-      <div class="col-9">
-        <span>Name</span>
+      <div class="col-8">
+        <span class="q-ml-md">Name</span>
+      </div>
+
+      <div class="col-2 flex justify-center items-center">
+        <span>Color</span>
       </div>
     </div>
     <div
@@ -13,18 +17,35 @@
       :key="setting.index"
       class="row q-my-sm"
     >
-      <div class="col-3">
+      <div class="col-2 flex justify-center items-center">
         <q-checkbox
           v-model="setting.show"
           label=""
         />
       </div>
 
-      <div class="col-9">
+      <div class="col-8">
         <q-input
           filled
           v-model="setting.name"
         />
+      </div>
+
+
+      <div class="col-2 flex justify-center items-center">
+        <div
+          class="color-button q-pa-sm "
+          :style="{ backgroundColor: setting.color }"
+        >
+          <q-menu>
+            <q-color
+              v-model="setting.color"
+              no-header-tabs
+              no-footer
+              class="my-picker"
+            />
+          </q-menu>
+        </div>
       </div>
     </div>
 
@@ -56,3 +77,27 @@ function saveSettings() {
   emit('close')
 }
 </script>
+
+<style lang="scss" scoped>
+
+.colNames {
+  span {
+    font-size: 0.8rem;
+  }
+}
+.color-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-top: 1.3rem;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+
+  transition: 0.25s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+</style>

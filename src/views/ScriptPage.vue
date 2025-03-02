@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { startAnalysisFromFile } from '../utils/baseScriptBatch'
+import { startAnalysisFromFile } from '../utils/script/analyseChat'
 import { useStore } from '@/store'
 
 async function startAnalayse() {

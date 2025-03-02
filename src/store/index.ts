@@ -1,14 +1,19 @@
 import { defineStore } from 'pinia'
-import { startAnalysisFromFile, analyseBatch } from '../utils/baseScriptBatch'
-import { Author, AuthorSettings, Event, Poll, SummaryItem } from '../utils/types'
+import { startAnalysisFromFile, analyseBatch } from '../utils/script/analyseChat'
+import { Author, AuthorSettings, Event, Poll, SummaryItem, Message } from '../utils/types'
+import { groupBy } from '@/utils/helperFunctions'
 import { ref, computed, reactive } from 'vue'
 import { event } from 'vue-gtag'
 import * as Sentry from '@sentry/vue'
+import { DEFAULT_COLORS } from '../config/highcharts'
 
 export const useStore = defineStore('global', () => {
+  const messagesData = ref<Message[]>([])
+
   const authorsData = ref<Author[]>([])
   const eventsData = ref<Event[]>([])
   const pollsData = ref<Poll[]>([])
+
   const authorsSettings = ref<AuthorSettings[]>([])
   const hasValidChatEntered = computed(() => authorsData.value.length > 0)
   const isGroupChat = computed(() => authorsData.value.length > 2)
@@ -38,6 +43,10 @@ export const useStore = defineStore('global', () => {
     authorsSettings.value = settings
   }
 
+  function getColorByAuthorId(authorId: number) {
+    return authorsSettings.value.find((setting) => setting.index === authorId)?.color || ''
+  }
+
   function setMaxDates(from: string | Date, to: string | Date) {
     maxDates.from = new Date(from)
     maxDates.to = new Date(to)
@@ -47,6 +56,13 @@ export const useStore = defineStore('global', () => {
     filterDate.from = new Date(from)
     filterDate.to = new Date(to)
   }
+
+  // TODO: Extend this
+  const filteredMessages = computed(() =>
+    messagesData.value.filter(
+      (message) => new Date(message.date) >= filterDate.from && new Date(message.date) <= filterDate.to && authorsSettings.value.find((settingItem) => settingItem.index === message.authorId)?.show
+    )
+  )
 
   // think of better name
   const messagesPerAuthor = computed(() => {
@@ -90,7 +106,7 @@ export const useStore = defineStore('global', () => {
   }
 
   async function analyseChatString(chat: string, isDemo = false) {
-    const state = { authors: [], events: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
+    const state = { authors: [], events: [], messages: [], polls: [], startDate: undefined, endDate: undefined, id: 0 } // Shared state for analysis
 
     // Batching might cut-off some messages. This is a trade-off for performance.
     const batchSize = 330000
@@ -137,16 +153,34 @@ export const useStore = defineStore('global', () => {
 
   async function setStoreData(fileString: string, isDemo = false) {
     authorsSettings.value = []
-    const { authors, events, startDate, endDate, polls } = await analyseChatString(fileString, isDemo)
+
+    const colors = DEFAULT_COLORS
+    const { authors, messages, events, startDate, endDate, polls } = await analyseChatString(fileString, isDemo)
     authors.forEach((author) => {
       authorsSettings.value.push({
         index: author.authorIndex,
         name: author.name,
+        color: colors[author.authorIndex] || '',
         show: true,
       })
     })
 
-    authorsData.value = authors
+    const groupedAuthor = groupBy(messages, 'authorId')
+
+    const mappedAuthors = Object.keys(groupedAuthor).map((key) => {
+      const authorIndex = parseInt(key)
+      const author = authors.find((author) => author.authorIndex === authorIndex)
+      const authorSetting = authorsSettings.value.find((settingItem) => settingItem.index === authorIndex)
+      const authorName = authorSetting?.name || author?.name
+      return {
+        authorIndex: authorIndex,
+        name: authorName,
+        messages: groupedAuthor[key],
+      }
+    })
+    authorsData.value = mappedAuthors
+
+    messagesData.value = messages
     eventsData.value = events
     pollsData.value = polls
     if (startDate && endDate && startDate !== 'Invalid Date' && endDate !== 'Invalid Date') {
@@ -185,9 +219,11 @@ export const useStore = defineStore('global', () => {
     isGroupChat,
     getData,
     maxDates,
+    getColorByAuthorId,
     setAuthorsSettings,
     loadingInfo,
     analyseChatString,
+    filteredMessages,
   }
 })
 
@@ -198,9 +234,9 @@ function detectLanguage(firstLine: string) {
     'I messaggi e le chiamate sono crittografati end-to-end.': 'it',
     'Los mensajes y las llamadas están cifrados de extremo a extremo': 'es',
     'sind Ende-zu-Ende-verschlüsselt': 'de',
-    'Les messages et appels sont chiffrés de bout en bout.': 'fr',
+    'Les messages et les appels sont chiffrés de bout en bout': 'fr',
     'criptografadas de ponta a ponta. ': 'pt-br', // Brazilian Portuguese
-    'encriptadas de ponta a ponta. ': 'pt-pt', // European Portuguese
+    'As mensagens e chamadas são encriptadas ponto a ponto.': 'pt-pt', // European Portuguese
     'Сообщения и звонки защищены сквозным шифрованием. Никто вне этого чата, даже WhatsApp, не может их прочитать или прослушать.': 'ru',
   }
 

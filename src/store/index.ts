@@ -238,6 +238,7 @@ function detectLanguage(firstLine: string) {
     'criptografadas de ponta a ponta. ': 'pt-br', // Brazilian Portuguese
     'As mensagens e chamadas são encriptadas ponto a ponto.': 'pt-pt', // European Portuguese
     'Сообщения и звонки защищены сквозным шифрованием. Никто вне этого чата, даже WhatsApp, не может их прочитать или прослушать.': 'ru',
+    'Mesajlar ve aramalar uçtan uca şifrelidir. WhatsApp da dahil olmak üzere bu sohbetin': 'tr'
   }
 
   let detectedLanguage = ''

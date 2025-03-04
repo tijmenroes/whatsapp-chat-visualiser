@@ -35,6 +35,10 @@ export const POLL_TRANSLATION = [
     lang: 'ru',
     translation: 'ОПРОС',
   },
+  {
+    lang: 'tr',
+    translation: 'ANKET',
+  },
 ]
 
 export const POLL_OPTION_TRANSLATION = [
@@ -73,6 +77,10 @@ export const POLL_OPTION_TRANSLATION = [
   {
     lang: 'ru',
     translation: 'ВАРИАНТ',
+  },
+  {
+    lang: 'tr',
+    translation: 'SEÇENEK',
   },
 ]
 
@@ -113,6 +121,10 @@ export const VOTE_TRANSLATION = [
     lang: 'ru',
     translation: 'голос',
   },
+  {
+    lang: 'tr',
+    translation: 'SEÇENEK',
+  },
 ]
 
 export const EVENT_TRANSLATION = [
@@ -151,6 +163,10 @@ export const EVENT_TRANSLATION = [
   {
     lang: 'ru',
     translation: 'СОБЫТИЕ',
+  },
+  {
+    lang: 'tr',
+    translation: 'ETKİNİK',
   },
 ]
 
@@ -191,6 +207,10 @@ export const MEDIA_OMITTED_TRANSLATION = [
     lang: 'ru',
     translation: 'Медиа опущено',
   },
+  {
+    lang: 'tr',
+    translation: 'MEDYA ATLANDI',
+  },
 ]
 
 // In the chats is seems as if it's always <Video note omitted> Maybe a bug on whatsapp side?
@@ -230,5 +250,9 @@ export const VIDEO_NOTE_OMITTED_TRANSLATION = [
   {
     lang: 'ru',
     translation: 'Видео-заметка опущена',
+  },
+  {
+    lang: 'tr',
+    translation: 'VIDEO NOTU ATLANDI',
   },
 ]

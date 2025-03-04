@@ -113,6 +113,7 @@ export function getOldDateFormat(messages: Message[]) {
     'MM/DD/YYYY': /^([0-1]?[0-9])\/([0-3]?[0-9])\/([0-9]{4})$/,
     'DD-MM-YYYY': /^([0-3]?[0-9])-(?:[0-1]?[0-9])-(?:[0-9]{4})$/,
     'MM-DD-YYYY': /^([0-1]?[0-9])-(?:[0-3]?[0-9])-(?:[0-9]{4})$/,
+    'DD.MM.YYYY': /^([0-3]?[0-9])[.]([0-1]?[0-9])[.]([0-9]{4})$/,
   }
 
   const detectDateFormat = (dates: string[]): string | null => {

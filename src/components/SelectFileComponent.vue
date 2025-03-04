@@ -269,7 +269,7 @@ function handleMobileUpload($event: Event) {
     Sentry.captureException(new Error('Mobile file upladoed'), {
       tags: {
         testString: 'Test string',
-        fileName: JSON.stringify(target.files[0].name),
+        fileName: JSON.stringify(target.files[0]?.name || 'No file name found'),
       },
     })
     onFileUploaded(target.files[0])
